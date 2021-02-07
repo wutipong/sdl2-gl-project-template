@@ -4,7 +4,6 @@
   "dependencies": [
     "sdl2",
     "imgui",
-    "harfbuzz",
     "opengl",
     "gl3w",
     "glm"
