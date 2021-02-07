@@ -24,9 +24,6 @@ jobs:
       - name: Build the project.
         run: cmake --build out --config Release
 
-      - name: Copy font files.
-        run: cp -r fonts out/Release/fonts/
-
       - name: Copy shader files.
         run: cp -r shaders out/Release/shaders/
 

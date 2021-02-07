@@ -12,7 +12,7 @@ jobs:
         with:
           submodules: true
       - run: "Get-ChildItem Env:"
-      
+
       - name: Create output dir
         run: mkdir out
         
@@ -22,9 +22,6 @@ jobs:
 
       - name: Build the project.
         run: cmake --build out --config Release
-
-      - name: Copy font files.
-        run: xcopy fonts out\Release\fonts\*
 
       - name: Copy shader files.
         run: xcopy shaders out\Release\shaders\*
