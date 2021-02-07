@@ -1,4 +1,4 @@
-name: ubuntu-build
+name: macos-build
 on: 
   push:
     branches:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -32,5 +32,5 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: ubuntu
+          name: macos
           path: out/Release
