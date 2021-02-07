@@ -15,7 +15,7 @@ jobs:
         run: mkdir out
         
       - name: Configure the project.
-        run: cmake $env:GITHUB_WORKSPACE
+        run: cmake $GITHUB_WORKSPACE
         working-directory: out
 
       - name: Build the project.
