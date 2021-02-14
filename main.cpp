@@ -1,5 +1,6 @@
 #include <GL/gl3w.h>
 #include <SDL2/SDL.h>
+#include <glm/glm.hpp>
 #include <imgui.h>
 
 #include "imgui_impl/imgui_impl_opengl3.h"
@@ -11,6 +12,8 @@ constexpr int WindowHeight = 600;
 constexpr char GlslVersion[] = "#version 450";
 constexpr int GlMajorVersion = 4;
 constexpr int GlMinorVersion = 5;
+
+constexpr glm::vec4 ClearColor = {0.33f, 0.67f, 1.0f, 1.00f};
 
 int main(int argc, char **argv) {
   SDL_Init(SDL_INIT_EVERYTHING);
@@ -62,21 +65,29 @@ int main(int argc, char **argv) {
     // Begin Draw UI
     ImGui::Begin("Hello");
     ImGui::LabelText("Hello", "Hello World");
+    ImGui::ShowDemoWindow();
     ImGui::End();
     // End Draw UI
 
     ImGui::EndFrame();
     ImGui::Render();
 
-    // Draw Game
-
     int actualWidth, actualHeight;
     SDL_GetWindowSize(window, &actualWidth, &actualHeight);
 
     glViewport(0, 0, actualHeight, actualHeight);
     glDisable(GL_SCISSOR_TEST);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(ClearColor.r, ClearColor.g, ClearColor.b, ClearColor.a);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    // draw here
+    /*
+     *
+     *
+     *
+     *
+     */
+    // end draw
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
