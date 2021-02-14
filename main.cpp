@@ -65,7 +65,6 @@ int main(int argc, char **argv) {
     // Begin Draw UI
     ImGui::Begin("Hello");
     ImGui::LabelText("Hello", "Hello World");
-    ImGui::ShowDemoWindow();
     ImGui::End();
     // End Draw UI
 
