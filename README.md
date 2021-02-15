@@ -1,8 +1,13 @@
 # sdl2-gl-project-template
 
-`sdl2-gl-project-template` is a C++ template project which configured for OpenGL and SDL2. It comes with [Dear ImGui](https://github.com/ocornut/imgui) preconfigured.
+`sdl2-gl-project-template` is a C++ template project which configured for OpenGL and SDL2. This template comes with the following libraries preconfigured.
 
-`sdl2-gl-project-template` comes with CMake build file that uses [Vcpkg](https://github.com/microsoft/vcpkg) package management as a submodule. 
+* [Simple DirectMedia Layer 2](http://libsdl.org/)
+* [Dear Imgui](https://github.com/ocornut/imgui)
+* [gl3w: Simple OpenGL core profile loading](https://github.com/skaslev/gl3w)
+* [OpenGL Mathematics](https://github.com/g-truc/glm)
+
+Above libraries are configured using [Vcpkg](https://github.com/microsoft/vcpkg) Library Manager and [Cmake](https://cmake.org/). 
 
 ## Usage
 
@@ -20,7 +25,8 @@ Also since we use `Vcpkg` as the package management, you can also add new depend
 
 Visual Studio 2019 and Visual Studio Code supports CMake project directly, given that the right components are installed. Simply use `Open Folder` menu to open the project file inside.
 
-###Manually configure
+### Manually configure
+* install `cmake`.
 * run `cmake <project directory>` inside an empty directory to configure the project. The configure step might take some time as it build the dependencies projects at the fast time it is configured. 
 * run `cmake --build .` (`.` must be included in the command) to build the project.
 
