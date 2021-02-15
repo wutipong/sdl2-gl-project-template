@@ -79,14 +79,14 @@ int main(int argc, char **argv) {
     glClearColor(ClearColor.r, ClearColor.g, ClearColor.b, ClearColor.a);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // draw here
+    // Begin Draw
     /*
      *
      *
      *
      *
      */
-    // end draw
+    // End Draw
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
