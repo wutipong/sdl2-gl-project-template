@@ -12,7 +12,7 @@ add_executable(sdl2-gl-project-template
 	"imgui_impl/imgui_impl_sdl.h" 
 	"imgui_impl/imgui_impl_sdl.cpp"
 	"imgui_impl/imgui_impl_opengl3.h" 
-	"imgui_impl/imgui_impl_opengl3.cpp" "scene.hpp" "scene.cpp")
+	"imgui_impl/imgui_impl_opengl3.cpp" "scene.hpp" "scene.cpp" "io_util.hpp")
 
 find_package(SDL2 CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
@@ -23,4 +23,4 @@ target_link_libraries(sdl2-gl-project-template PRIVATE SDL2::SDL2 SDL2::SDL2main
 
 target_compile_features(sdl2-gl-project-template PRIVATE cxx_std_17)
 
-file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/shaders" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/shaders")
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/shaders" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")

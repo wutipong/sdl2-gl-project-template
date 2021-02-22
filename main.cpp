@@ -77,8 +77,8 @@ int main(int argc, char **argv) {
     int actualWidth, actualHeight;
     SDL_GetWindowSize(window, &actualWidth, &actualHeight);
 
-    glViewport(0, 0, actualHeight, actualHeight);
-    glDisable(GL_SCISSOR_TEST);
+    glViewport(0, 0, actualWidth, actualHeight);
+
     glClearColor(ClearColor.r, ClearColor.g, ClearColor.b, ClearColor.a);
     glClear(GL_COLOR_BUFFER_BIT);
 
