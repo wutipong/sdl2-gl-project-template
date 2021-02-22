@@ -6,6 +6,8 @@
 #include "imgui_impl/imgui_impl_opengl3.h"
 #include "imgui_impl/imgui_impl_sdl.h"
 
+#include "scene.hpp"
+
 constexpr int WindowWidth = 800;
 constexpr int WindowHeight = 600;
 
@@ -50,6 +52,9 @@ int main(int argc, char **argv) {
   ImGui_ImplSDL2_InitForOpenGL(window, glCtx);
   ImGui_ImplOpenGL3_Init(GlslVersion);
 
+  Scene scene;
+  scene.Init();
+
   while (true) {
     SDL_Event event;
     if (SDL_PollEvent(&event)) {
@@ -63,9 +68,7 @@ int main(int argc, char **argv) {
     ImGui::NewFrame();
 
     // Begin Draw UI
-    ImGui::Begin("Hello");
-    ImGui::LabelText("Hello", "Hello World");
-    ImGui::End();
+    scene.DoUI();
     // End Draw UI
 
     ImGui::EndFrame();
@@ -80,12 +83,7 @@ int main(int argc, char **argv) {
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Begin Draw
-    /*
-     *
-     *
-     *
-     *
-     */
+    scene.DoFrame(event);
     // End Draw
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -93,6 +91,8 @@ int main(int argc, char **argv) {
     SDL_GL_SwapWindow(window);
     SDL_Delay(1);
   }
+
+  scene.CleanUp();
 
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplSDL2_Shutdown();
