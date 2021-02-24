@@ -21,8 +21,15 @@ find_package(SDL2 CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(gl3w CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
 
-target_link_libraries(sdl2-gl-project-template PRIVATE SDL2::SDL2 SDL2::SDL2main imgui::imgui unofficial::gl3w::gl3w)
+target_link_libraries(sdl2-gl-project-template PRIVATE 
+    SDL2::SDL2 
+    SDL2::SDL2main 
+    imgui::imgui 
+    unofficial::gl3w::gl3w 
+    spdlog::spdlog 
+    spdlog::spdlog_header_only)
 
 target_compile_features(sdl2-gl-project-template PRIVATE cxx_std_17)
 
@@ -33,7 +40,7 @@ file(GLOB_RECURSE GLSL_SOURCE_FILES
 
 add_custom_target(SHADER_COMPILE 
     SOURCES ${GLSL_SOURCE_FILES} 
-	COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/shaders/"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/shaders/"
     COMMAND ${CMAKE_COMMAND} -E copy ${GLSL_SOURCE_FILES} "${CMAKE_CURRENT_BINARY_DIR}/shaders/"
 )
 

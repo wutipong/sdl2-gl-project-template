@@ -6,6 +6,7 @@
     "imgui",
     "opengl",
     "gl3w",
-    "glm"
+    "glm",
+    "spdlog"
   ]
 }
