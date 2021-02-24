@@ -40,6 +40,12 @@ int main(int argc, char **argv) {
   SDL_SetWindowMinimumSize(window, WindowWidth, WindowHeight);
 
   SDL_GLContext glCtx = SDL_GL_CreateContext(window);
+  if (glCtx == nullptr) {
+    printf("Error: %s.\n", SDL_GetError());
+    printf("Exit.\n");
+
+    return -1;
+  }
   SDL_GL_MakeCurrent(window, glCtx);
   SDL_GL_SetSwapInterval(1); // Enable vsync
 
