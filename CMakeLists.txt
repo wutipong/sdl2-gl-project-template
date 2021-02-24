@@ -15,7 +15,7 @@ add_executable(sdl2-gl-project-template
 	"imgui_impl/imgui_impl_opengl3.cpp" 
 	"scene.hpp" "scene.cpp" 
 	"io_util.hpp"
-)
+ "shader.hpp" "shader.cpp")
 
 find_package(SDL2 CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)

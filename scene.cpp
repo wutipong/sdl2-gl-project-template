@@ -6,22 +6,11 @@
 #include <vector>
 
 #include "io_util.hpp"
+#include "shader.hpp"
 
 void Scene::Init() {
-
-  std::string vertShaderSrc;
-  LoadFile("shaders/shader.vert", vertShaderSrc);
-  vertShader = glCreateShader(GL_VERTEX_SHADER);
-  auto src = vertShaderSrc.data();
-  glShaderSource(vertShader, 1, (const GLchar **)&src, 0);
-  glCompileShader(vertShader);
-
-  std::string fragShaderSrc;
-  LoadFile("shaders/shader.frag", fragShaderSrc);
-  fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-  src = fragShaderSrc.data();
-  glShaderSource(fragShader, 1, (const GLchar **)&src, 0);
-  glCompileShader(fragShader);
+  vertShader = CompileShader("shaders/shader.vert", GL_VERTEX_SHADER);
+  fragShader = CompileShader("shaders/shader.frag", GL_FRAGMENT_SHADER);
 
   program = glCreateProgram();
   glAttachShader(program, vertShader);
