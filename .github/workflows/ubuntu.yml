@@ -24,15 +24,9 @@ jobs:
         working-directory: out
 
       - name: Build the project.
-        run: cmake --build out --config Release
-
-      - name: Create shader dir
-        run: mkdir -p out/Release/shaders/
-
-      - name: Copy shader files.
-        run: cp -r shaders out/Release/shaders/
+        run: cmake --build
 
       - uses: actions/upload-artifact@v2
         with:
           name: ubuntu
-          path: out/Release
+          path: out
