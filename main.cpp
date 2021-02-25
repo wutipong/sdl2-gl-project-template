@@ -14,9 +14,9 @@ constexpr auto ProjectName = "sdl-gl-project-template";
 constexpr int WindowWidth = 800;
 constexpr int WindowHeight = 600;
 
-constexpr char GlslVersion[] = "#version 450";
+constexpr char GlslVersion[] = "#version 410";
 constexpr int GlMajorVersion = 4;
-constexpr int GlMinorVersion = 5;
+constexpr int GlMinorVersion = 1;
 
 constexpr glm::vec4 ClearColor = {0.33f, 0.67f, 1.0f, 1.00f};
 
@@ -24,7 +24,8 @@ void PrintDeviceInformation();
 
 int main(int argc, char **argv) {
   SDL_Init(SDL_INIT_EVERYTHING);
-
+  spdlog::set_level(spdlog::level::debug);
+  
   spdlog::info("{} - starts.", ProjectName);
 
   SDL_GL_SetAttribute(

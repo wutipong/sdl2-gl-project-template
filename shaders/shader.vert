@@ -1,8 +1,8 @@
-#version 450 core
+#version 410 core
 
 layout(location = 0) in vec2 in_Position;
 
-layout(location = 0) uniform vec4 in_Color;
+uniform vec4 in_Color;
 
 out vec4 ex_Color;
 

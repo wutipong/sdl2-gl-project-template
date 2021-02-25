@@ -49,7 +49,9 @@ void Scene::DoFrame(SDL_Event &event) {
   glBindVertexArray(vao);
   glUseProgram(program);
 
-  glUniform4f(0, color.r, color.g, color.b, color.a);
+  auto uniform = glGetUniformLocation(program, "in_Color");
+
+  glUniform4f(uniform, color.r, color.g, color.b, color.a);
   glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
