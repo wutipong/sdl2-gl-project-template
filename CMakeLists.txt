@@ -22,6 +22,7 @@ find_package(imgui CONFIG REQUIRED)
 find_package(gl3w CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 
 target_link_libraries(sdl2-gl-project-template PRIVATE 
     SDL2::SDL2 
@@ -29,7 +30,8 @@ target_link_libraries(sdl2-gl-project-template PRIVATE
     imgui::imgui 
     unofficial::gl3w::gl3w 
     spdlog::spdlog 
-    spdlog::spdlog_header_only)
+    spdlog::spdlog_header_only
+    fmt::fmt)
 
 target_compile_features(sdl2-gl-project-template PRIVATE cxx_std_17)
 
