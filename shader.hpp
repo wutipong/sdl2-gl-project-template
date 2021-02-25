@@ -1,6 +1,15 @@
 #pragma
 
-#include <string>
 #include <GL/gl3w.h>
+#include <string>
 
-GLuint CompileShader(const std::string& path, const GLenum& type);
+namespace shader {
+
+struct Options {
+  std::string SourcePath = "shaders";
+  std::string CachePath = "shader_cached";
+};
+
+void Init(const Options& options = {});
+GLuint Load(const std::string &name, const GLenum &type);
+} // namespace shader

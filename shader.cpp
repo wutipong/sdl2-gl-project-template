@@ -1,13 +1,30 @@
 #include "shader.hpp"
 
+#include <filesystem>
 #include <spdlog/spdlog.h>
 
 #include "io_util.hpp"
 
-GLuint CompileShader(const std::string &path, const GLenum &type) {
-  spdlog::info("Shader compile: {}.", path);
+namespace shader {
+Options options;
+}
+
+void shader::Init(const shader::Options &options) {
+  shader::options = options;
+  spdlog::info("Shader system init.");
+  spdlog::info("\tShader source: {}", options.SourcePath);
+  spdlog::info("\tShader cache: {}", options.CachePath);
+}
+
+GLuint shader::Load(const std::string &name, const GLenum &type) {
+  spdlog::info("Loading shader: {}.", name);
+  
+  auto path = std::filesystem::current_path()
+                  .append(shader::options.SourcePath)
+                  .append(name);
+
   std::string srcStr;
-  LoadFile(path, srcStr);
+  LoadFile(path.string(), srcStr);
 
   auto shader = glCreateShader(type);
   auto src = srcStr.data();
@@ -19,7 +36,6 @@ GLuint CompileShader(const std::string &path, const GLenum &type) {
   glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
 
   if (compileStatus == GL_FALSE) {
-    printf("Shader compile failed: %s\n", path.c_str());
     spdlog::error("Shader compile failed.");
   }
 
