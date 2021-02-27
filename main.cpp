@@ -16,7 +16,7 @@ constexpr int WindowHeight = 600;
 
 constexpr char GlslVersion[] = "#version 410";
 constexpr int GlMajorVersion = 4;
-constexpr int GlMinorVersion = 1;
+constexpr int GlMinorVersion = 5;
 
 constexpr glm::vec4 ClearColor = {0.33f, 0.67f, 1.0f, 1.00f};
 
@@ -67,6 +67,8 @@ int main(int argc, char **argv) {
 
   ImGui_ImplSDL2_InitForOpenGL(window, glCtx);
   ImGui_ImplOpenGL3_Init(GlslVersion);
+
+  shader::PrintSupportedBinaryFormat();
 
   Scene scene;
   scene.Init();

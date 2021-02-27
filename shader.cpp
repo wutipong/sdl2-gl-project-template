@@ -49,30 +49,3 @@ GLuint shader::Compile(const GLenum &type, const std::string &srcStr) {
 
   return shader;
 }
-
-GLuint shader::LoadBinary(const std::string &path, const GLenum &shaderType,
-                          const GLenum &binaryFormat) {
-  spdlog::info("Loading shader: {}.", path);
-
-  std::vector<char> content;
-  LoadFile(path, content, std::ios_base::binary);
-
-  auto shader = glCreateShader(shaderType);
-
-  glShaderBinary(1, &shader, binaryFormat, content.data(), content.size());
-  auto error = glGetError();
-  if (error != GL_NO_ERROR) {
-    switch (error) {
-    case GL_INVALID_ENUM:
-      spdlog::error("Unsupported format: {}", binaryFormat);
-      break;
-    case GL_INVALID_VALUE:
-      spdlog::error("Invalid data format.");
-      break;
-    }
-    glDeleteShader(shader);
-    shader = -1;
-  }
-
-  return shader;
-}
