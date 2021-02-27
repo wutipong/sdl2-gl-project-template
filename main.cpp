@@ -68,7 +68,6 @@ int main(int argc, char **argv) {
   ImGui_ImplSDL2_InitForOpenGL(window, glCtx);
   ImGui_ImplOpenGL3_Init(GlslVersion);
 
-  shader::Init();
   Scene scene;
   scene.Init();
 

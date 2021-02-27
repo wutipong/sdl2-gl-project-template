@@ -9,8 +9,8 @@
 #include "shader.hpp"
 
 void Scene::Init() {
-  vertShader = shader::Load("shader.vert", GL_VERTEX_SHADER);
-  fragShader = shader::Load("shader.frag", GL_FRAGMENT_SHADER);
+  vertShader = shader::LoadSource("shaders/shader.vert", GL_VERTEX_SHADER);
+  fragShader = shader::LoadSource("shaders/shader.frag", GL_FRAGMENT_SHADER);
 
   program = glCreateProgram();
   glAttachShader(program, vertShader);

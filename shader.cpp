@@ -6,26 +6,24 @@
 #include "io_util.hpp"
 
 namespace shader {
-Options options;
+GLuint Compile(const GLenum &type, const std::string &srcStr);
 }
 
-void shader::Init(const shader::Options &options) {
-  shader::options = options;
-  spdlog::info("Shader system init.");
-  spdlog::info("\tShader source: {}", options.SourcePath);
-  spdlog::info("\tShader cache: {}", options.CachePath);
+GLuint shader::FromSource(const std::string &code, const GLenum &shaderType) {
+  spdlog::info("Creating shader: {}.", code);
+  return Compile(shaderType, code);
 }
 
-GLuint shader::Load(const std::string &name, const GLenum &type) {
-  spdlog::info("Loading shader: {}.", name);
-  
-  auto path = std::filesystem::current_path()
-                  .append(shader::options.SourcePath)
-                  .append(name);
+GLuint shader::LoadSource(const std::string &path, const GLenum &type) {
+  spdlog::info("Loading shader: {}.", path);
 
   std::string srcStr;
-  LoadFile(path.string(), srcStr);
+  LoadFile(path, srcStr);
 
+  return Compile(type, srcStr);
+}
+
+GLuint shader::Compile(const GLenum &type, const std::string &srcStr) {
   auto shader = glCreateShader(type);
   auto src = srcStr.data();
 
@@ -47,6 +45,33 @@ GLuint shader::Load(const std::string &name, const GLenum &type) {
 
     glGetShaderInfoLog(shader, log.size(), &logLength, log.data());
     spdlog::debug("Shader Log {}.", log);
+  }
+
+  return shader;
+}
+
+GLuint shader::LoadBinary(const std::string &path, const GLenum &shaderType,
+                          const GLenum &binaryFormat) {
+  spdlog::info("Loading shader: {}.", path);
+
+  std::vector<char> content;
+  LoadFile(path, content, std::ios_base::binary);
+
+  auto shader = glCreateShader(shaderType);
+
+  glShaderBinary(1, &shader, binaryFormat, content.data(), content.size());
+  auto error = glGetError();
+  if (error != GL_NO_ERROR) {
+    switch (error) {
+    case GL_INVALID_ENUM:
+      spdlog::error("Unsupported format: {}", binaryFormat);
+      break;
+    case GL_INVALID_VALUE:
+      spdlog::error("Invalid data format.");
+      break;
+    }
+    glDeleteShader(shader);
+    shader = -1;
   }
 
   return shader;
