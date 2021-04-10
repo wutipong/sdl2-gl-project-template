@@ -8,6 +8,7 @@
     "gl3w",
     "glm",
     "spdlog",
-    "fmt"
+    "fmt",
+    "magic-enum"
   ]
 }

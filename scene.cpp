@@ -4,6 +4,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
 #include <vector>
+#include <magic_enum.hpp>
 
 #include "io_util.hpp"
 #include "shader.hpp"
