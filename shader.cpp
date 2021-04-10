@@ -6,26 +6,24 @@
 #include "io_util.hpp"
 
 namespace shader {
-Options options;
+GLuint Compile(const GLenum &type, const std::string &srcStr);
 }
 
-void shader::Init(const shader::Options &options) {
-  shader::options = options;
-  spdlog::info("Shader system init.");
-  spdlog::info("\tShader source: {}", options.SourcePath);
-  spdlog::info("\tShader cache: {}", options.CachePath);
+GLuint shader::FromSource(const std::string &code, const GLenum &shaderType) {
+  spdlog::info("Creating shader: {}.", code);
+  return Compile(shaderType, code);
 }
 
-GLuint shader::Load(const std::string &name, const GLenum &type) {
-  spdlog::info("Loading shader: {}.", name);
-  
-  auto path = std::filesystem::current_path()
-                  .append(shader::options.SourcePath)
-                  .append(name);
+GLuint shader::LoadSource(const std::string &path, const GLenum &type) {
+  spdlog::info("Loading shader: {}.", path);
 
   std::string srcStr;
-  LoadFile(path.string(), srcStr);
+  LoadFile(path, srcStr);
 
+  return Compile(type, srcStr);
+}
+
+GLuint shader::Compile(const GLenum &type, const std::string &srcStr) {
   auto shader = glCreateShader(type);
   auto src = srcStr.data();
 

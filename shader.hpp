@@ -4,12 +4,6 @@
 #include <string>
 
 namespace shader {
-
-struct Options {
-  std::string SourcePath = "shaders";
-  std::string CachePath = "shader_cached";
-};
-
-void Init(const Options& options = {});
-GLuint Load(const std::string &name, const GLenum &type);
+GLuint FromSource(const std::string &code, const GLenum &shaderType);
+GLuint LoadSource(const std::string &path, const GLenum &shaderType);
 } // namespace shader
