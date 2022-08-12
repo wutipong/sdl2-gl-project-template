@@ -2,15 +2,14 @@
 #include <SDL2/SDL.h>
 #include <glm/glm.hpp>
 #include <imgui.h>
+#include <imgui_impl_opengl3.h>
+#include <imgui_impl_sdl.h>
 #include <spdlog/spdlog.h>
-
-#include "imgui_impl/imgui_impl_opengl3.h"
-#include "imgui_impl/imgui_impl_sdl.h"
 
 #include "shader.hpp"
 #include "scene.hpp"
 
-constexpr auto ProjectName = "sdl-gl-project-template";
+constexpr char ProjectName[] = "sdl-gl-project-template";
 constexpr int WindowWidth = 800;
 constexpr int WindowHeight = 600;
 
@@ -122,16 +121,18 @@ int main(int argc, char **argv) {
 }
 
 void PrintDeviceInformation() {
+  
   spdlog::info("OpenGL Device Information.");
-  spdlog::info("\tOpenGL: {}", glGetString(GL_VERSION));
-  spdlog::info("\tGLSL: {}", glGetString(GL_SHADING_LANGUAGE_VERSION));
-  spdlog::info("\tDevice: {}", glGetString(GL_RENDERER));
-  spdlog::info("\tVendor: {}", glGetString(GL_VENDOR));
+  spdlog::info("\tOpenGL: {}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+  spdlog::info("\tGLSL: {}", reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
+  spdlog::info("\tDevice: {}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+  spdlog::info("\tVendor: {}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
   spdlog::info("Supported Extensions:");
+  
   int extCount;
   glGetIntegerv(GL_NUM_EXTENSIONS, &extCount);
 
   for (int i = 0; i < extCount; i++) {
-    spdlog::info("\t{}", glGetStringi(GL_EXTENSIONS, i));
+    spdlog::info("\t{}", reinterpret_cast<const char*>(glGetStringi(GL_EXTENSIONS, i)));
   }
 }

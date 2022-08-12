@@ -9,13 +9,9 @@ project(sdl2-gl-project-template)
 # add the executable
 add_executable(sdl2-gl-project-template 
 	"main.cpp" 
-	"imgui_impl/imgui_impl_sdl.h" 
-	"imgui_impl/imgui_impl_sdl.cpp"
-	"imgui_impl/imgui_impl_opengl3.h" 
-	"imgui_impl/imgui_impl_opengl3.cpp" 
 	"scene.hpp" "scene.cpp" 
 	"io_util.hpp"
- "shader.hpp" "shader.cpp")
+    "shader.hpp" "shader.cpp")
 
 find_package(SDL2 CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
@@ -31,9 +27,17 @@ target_link_libraries(sdl2-gl-project-template PRIVATE
     unofficial::gl3w::gl3w 
     spdlog::spdlog 
     spdlog::spdlog_header_only
-    fmt::fmt)
+    fmt::fmt
+    fmt::fmt-header-only)
 
 target_compile_features(sdl2-gl-project-template PRIVATE cxx_std_17)
+set_property(TARGET sdl2-gl-project-template PROPERTY CXX_STANDARD 17)
+set_property(TARGET sdl2-gl-project-template PROPERTY CXX_STANDARD_REQUIRED ON)
+
+if (MSVC)
+	# set_property(TARGET sdl2-gl-project-template PROPERTY WIN32_EXECUTABLE ON)
+	target_compile_options(sdl2-gl-project-template PRIVATE /Zc:__cplusplus)
+endif()
 
 file(GLOB_RECURSE GLSL_SOURCE_FILES
     "shaders/*.frag"
