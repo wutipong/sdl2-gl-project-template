@@ -3,11 +3,17 @@
 #include <glm/glm.hpp>
 #include <GL/gl3w.h>
 
+struct FrameContext {
+	SDL_Event& event;
+	const int WindowWidth;
+	const int WindowHeiht;
+};
+
 class Scene {
 public:
   void Init();
   void CleanUp();
-  void DoFrame(SDL_Event& event);
+  void DoFrame(const FrameContext& ctx);
   void DoUI();
 
 private:

@@ -46,7 +46,7 @@ void Scene::CleanUp() {
   glDeleteShader(fragShader);
 }
 
-void Scene::DoFrame(SDL_Event &event) {
+void Scene::DoFrame(const FrameContext& ctx) {
   glBindVertexArray(vao);
   glUseProgram(program);
 
