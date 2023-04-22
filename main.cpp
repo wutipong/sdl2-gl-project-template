@@ -68,6 +68,8 @@ int main(int argc, char **argv) {
   Scene scene;
   scene.Init();
 
+  auto lastFrame = SDL_GetTicks64();
+
   while (true) {
     SDL_Event event;
     if (SDL_PollEvent(&event)) {
@@ -80,9 +82,7 @@ int main(int argc, char **argv) {
     ImGui_ImplSDL2_NewFrame(window);
     ImGui::NewFrame();
 
-    // Begin Draw UI
     scene.DoUI();
-    // End Draw UI
 
     ImGui::EndFrame();
     ImGui::Render();
@@ -95,13 +95,16 @@ int main(int argc, char **argv) {
     glClearColor(ClearColor.r, ClearColor.g, ClearColor.b, ClearColor.a);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // Begin Draw
+    auto now = SDL_GetTicks64();
+
     scene.DoFrame({
-        event,
-        actualWidth,
-        actualHeight,
+        .event = event,
+        .windowWidth = actualWidth,
+        .windowHeight = actualHeight,
+        .frameTime = ((float)now - (float)lastFrame) / 1000.0f,
     });
-    // End Draw
+
+    lastFrame = now;
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

@@ -30,12 +30,12 @@ target_link_libraries(sdl2-gl-project-template PRIVATE
     fmt::fmt
     fmt::fmt-header-only)
 
-target_compile_features(sdl2-gl-project-template PRIVATE cxx_std_17)
-set_property(TARGET sdl2-gl-project-template PROPERTY CXX_STANDARD 17)
+target_compile_features(sdl2-gl-project-template PRIVATE cxx_std_20)
+set_property(TARGET sdl2-gl-project-template PROPERTY CXX_STANDARD 20)
 set_property(TARGET sdl2-gl-project-template PROPERTY CXX_STANDARD_REQUIRED ON)
 
 if (MSVC)
-	# set_property(TARGET sdl2-gl-project-template PROPERTY WIN32_EXECUTABLE ON)
+	set_property(TARGET sdl2-gl-project-template PROPERTY WIN32_EXECUTABLE ON)
 	target_compile_options(sdl2-gl-project-template PRIVATE /Zc:__cplusplus)
 endif()
 

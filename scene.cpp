@@ -3,8 +3,8 @@
 #include <array>
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
-#include <vector>
 #include <magic_enum.hpp>
+#include <vector>
 
 #include "io_util.hpp"
 #include "shader.hpp"
@@ -24,11 +24,11 @@ void Scene::Init() {
   glGenBuffers(1, &vbo);
 
   // clang-format off
-    float vertices[] = {
-      -1.0f, -1.0f,
-      1.0f, -1.0f,
-      0.0f, 1.0f,
-    };
+  float vertices[] = {
+    -1.0f, -1.0f,
+    1.0f, -1.0f,
+    0.0f, 1.0f,
+  };
   // clang-format on
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -46,7 +46,7 @@ void Scene::CleanUp() {
   glDeleteShader(fragShader);
 }
 
-void Scene::DoFrame(const FrameContext& ctx) {
+void Scene::DoFrame(const FrameContext &ctx) {
   glBindVertexArray(vao);
   glUseProgram(program);
 
@@ -58,7 +58,6 @@ void Scene::DoFrame(const FrameContext& ctx) {
 
 void Scene::DoUI() {
   ImGui::Begin("Editor");
-  ImGui::ColorPicker4("Color", glm::value_ptr(color),
-                      ImGuiColorEditFlags_Float);
+  ImGui::ColorPicker4("Color", glm::value_ptr(color), ImGuiColorEditFlags_Float);
   ImGui::End();
 }
