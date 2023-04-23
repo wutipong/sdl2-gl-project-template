@@ -1,6 +1,4 @@
 {
-  "name": "sdl2-gl-project-template",
-  "version-string": "0.1.0-dev",
   "dependencies": [
     "sdl2",
     "opengl",
@@ -8,7 +6,6 @@
     "glm",
     "spdlog",
     "fmt",
-    "magic-enum",
     {
       "name": "imgui",
       "features": [

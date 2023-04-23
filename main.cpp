@@ -17,8 +17,6 @@ constexpr char GlslVersion[] = "#version 410";
 constexpr int GlMajorVersion = 4;
 constexpr int GlMinorVersion = 5;
 
-constexpr glm::vec4 ClearColor = {0.33f, 0.67f, 1.0f, 1.00f};
-
 void PrintDeviceInformation();
 
 int main(int argc, char **argv) {
@@ -27,9 +25,8 @@ int main(int argc, char **argv) {
 
   spdlog::info("{} - starts.", ProjectName);
 
-  SDL_GL_SetAttribute(
-      SDL_GL_CONTEXT_FLAGS,
-      SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); // Always required on Mac
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS,
+                      SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); // Always required on Mac
 
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, GlMajorVersion);
@@ -39,10 +36,9 @@ int main(int argc, char **argv) {
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-  SDL_Window *window = SDL_CreateWindow(
-      "sdl2-gl-project-template", SDL_WINDOWPOS_UNDEFINED,
-      SDL_WINDOWPOS_UNDEFINED, WindowWidth, WindowHeight,
-      SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL);
+  SDL_Window *window =
+      SDL_CreateWindow("sdl2-gl-project-template", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WindowWidth,
+                       WindowHeight, SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL);
 
   SDL_SetWindowMinimumSize(window, WindowWidth, WindowHeight);
 
@@ -67,8 +63,7 @@ int main(int argc, char **argv) {
   ImGui_ImplSDL2_InitForOpenGL(window, glCtx);
   ImGui_ImplOpenGL3_Init(GlslVersion);
 
-  Scene scene;
-  scene.Init();
+  Scene::Init();
 
   auto lastFrame = SDL_GetTicks64();
 
@@ -84,7 +79,7 @@ int main(int argc, char **argv) {
     ImGui_ImplSDL2_NewFrame(window);
     ImGui::NewFrame();
 
-    scene.DoUI();
+    Scene::DoUI();
 
     ImGui::EndFrame();
     ImGui::Render();
@@ -92,14 +87,9 @@ int main(int argc, char **argv) {
     int actualWidth, actualHeight;
     SDL_GetWindowSize(window, &actualWidth, &actualHeight);
 
-    glViewport(0, 0, actualWidth, actualHeight);
-
-    glClearColor(ClearColor.r, ClearColor.g, ClearColor.b, ClearColor.a);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     auto now = SDL_GetTicks64();
 
-    scene.DoFrame({
+    Scene::DoFrame({
         .event = event,
         .windowWidth = actualWidth,
         .windowHeight = actualHeight,
@@ -114,7 +104,7 @@ int main(int argc, char **argv) {
     SDL_Delay(1);
   }
 
-  scene.CleanUp();
+  Scene::CleanUp();
 
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplSDL2_Shutdown();
@@ -130,21 +120,16 @@ int main(int argc, char **argv) {
 void PrintDeviceInformation() {
 
   spdlog::info("OpenGL Device Information.");
-  spdlog::info("\tOpenGL: {}",
-               reinterpret_cast<const char *>(glGetString(GL_VERSION)));
-  spdlog::info("\tGLSL: {}", reinterpret_cast<const char *>(
-                                 glGetString(GL_SHADING_LANGUAGE_VERSION)));
-  spdlog::info("\tDevice: {}",
-               reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
-  spdlog::info("\tVendor: {}",
-               reinterpret_cast<const char *>(glGetString(GL_VENDOR)));
+  spdlog::info("\tOpenGL: {}", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
+  spdlog::info("\tGLSL: {}", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
+  spdlog::info("\tDevice: {}", reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
+  spdlog::info("\tVendor: {}", reinterpret_cast<const char *>(glGetString(GL_VENDOR)));
   spdlog::info("Supported Extensions:");
 
   int extCount;
   glGetIntegerv(GL_NUM_EXTENSIONS, &extCount);
 
   for (int i = 0; i < extCount; i++) {
-    spdlog::info(
-        "\t{}", reinterpret_cast<const char *>(glGetStringi(GL_EXTENSIONS, i)));
+    spdlog::info("\t{}", reinterpret_cast<const char *>(glGetStringi(GL_EXTENSIONS, i)));
   }
 }

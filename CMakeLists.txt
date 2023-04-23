@@ -7,7 +7,7 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 project(sdl2-gl-project-template)
 
 # add the executable
-add_executable(sdl2-gl-project-template 
+add_executable(main 
 	"main.cpp" 
 	"scene.hpp" "scene.cpp" 
 	"io_util.hpp"
@@ -20,7 +20,7 @@ find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 
-target_link_libraries(sdl2-gl-project-template PRIVATE 
+target_link_libraries(main PRIVATE 
     SDL2::SDL2 
     SDL2::SDL2main 
     imgui::imgui 
@@ -30,13 +30,13 @@ target_link_libraries(sdl2-gl-project-template PRIVATE
     fmt::fmt
     fmt::fmt-header-only)
 
-target_compile_features(sdl2-gl-project-template PRIVATE cxx_std_20)
-set_property(TARGET sdl2-gl-project-template PROPERTY CXX_STANDARD 20)
-set_property(TARGET sdl2-gl-project-template PROPERTY CXX_STANDARD_REQUIRED ON)
+target_compile_features(main PRIVATE cxx_std_20)
+set_property(TARGET main PROPERTY CXX_STANDARD 20)
+set_property(TARGET main PROPERTY CXX_STANDARD_REQUIRED ON)
 
 if (MSVC)
-	set_property(TARGET sdl2-gl-project-template PROPERTY WIN32_EXECUTABLE ON)
-	target_compile_options(sdl2-gl-project-template PRIVATE /Zc:__cplusplus)
+	set_property(TARGET main PROPERTY WIN32_EXECUTABLE ON)
+	target_compile_options(main PRIVATE /Zc:__cplusplus)
 endif()
 
 file(GLOB_RECURSE GLSL_SOURCE_FILES
@@ -50,4 +50,4 @@ add_custom_target(SHADER_COMPILE
     COMMAND ${CMAKE_COMMAND} -E copy ${GLSL_SOURCE_FILES} "${CMAKE_CURRENT_BINARY_DIR}/shaders/"
 )
 
-add_dependencies(sdl2-gl-project-template SHADER_COMPILE)
+add_dependencies(main SHADER_COMPILE)
