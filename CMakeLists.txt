@@ -14,6 +14,7 @@ add_executable(main
     "shader.hpp" "shader.cpp")
 
 find_package(SDL2 CONFIG REQUIRED)
+find_package(OpenGL REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(gl3w CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
@@ -23,6 +24,7 @@ find_package(fmt CONFIG REQUIRED)
 target_link_libraries(main PRIVATE 
     SDL2::SDL2 
     SDL2::SDL2main 
+    OpenGL::GL
     imgui::imgui 
     unofficial::gl3w::gl3w 
     spdlog::spdlog 
