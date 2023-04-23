@@ -43,7 +43,7 @@ GLuint shader::Compile(const GLenum &type, const std::string &srcStr) {
     std::string log;
     log.resize(logLength);
 
-    glGetShaderInfoLog(shader, log.size(), &logLength, log.data());
+    glGetShaderInfoLog(shader, static_cast<GLsizei>(log.size()), &logLength, log.data());
     spdlog::debug("Shader Log {}.", log);
   }
 

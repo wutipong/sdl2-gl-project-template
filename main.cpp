@@ -27,8 +27,9 @@ int main(int argc, char **argv) {
 
   spdlog::info("{} - starts.", ProjectName);
 
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS,
-                      SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); // Always required on Mac
+  SDL_GL_SetAttribute(
+      SDL_GL_CONTEXT_FLAGS,
+      SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); // Always required on Mac
 
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, GlMajorVersion);
@@ -38,9 +39,10 @@ int main(int argc, char **argv) {
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-  SDL_Window *window =
-      SDL_CreateWindow("sdl2-gl-project-template", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WindowWidth,
-                       WindowHeight, SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL);
+  SDL_Window *window = SDL_CreateWindow(
+      "sdl2-gl-project-template", SDL_WINDOWPOS_UNDEFINED,
+      SDL_WINDOWPOS_UNDEFINED, WindowWidth, WindowHeight,
+      SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL);
 
   SDL_SetWindowMinimumSize(window, WindowWidth, WindowHeight);
 
@@ -93,7 +95,7 @@ int main(int argc, char **argv) {
     glViewport(0, 0, actualWidth, actualHeight);
 
     glClearColor(ClearColor.r, ClearColor.g, ClearColor.b, ClearColor.a);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     auto now = SDL_GetTicks64();
 
@@ -128,16 +130,21 @@ int main(int argc, char **argv) {
 void PrintDeviceInformation() {
 
   spdlog::info("OpenGL Device Information.");
-  spdlog::info("\tOpenGL: {}", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
-  spdlog::info("\tGLSL: {}", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
-  spdlog::info("\tDevice: {}", reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
-  spdlog::info("\tVendor: {}", reinterpret_cast<const char *>(glGetString(GL_VENDOR)));
+  spdlog::info("\tOpenGL: {}",
+               reinterpret_cast<const char *>(glGetString(GL_VERSION)));
+  spdlog::info("\tGLSL: {}", reinterpret_cast<const char *>(
+                                 glGetString(GL_SHADING_LANGUAGE_VERSION)));
+  spdlog::info("\tDevice: {}",
+               reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
+  spdlog::info("\tVendor: {}",
+               reinterpret_cast<const char *>(glGetString(GL_VENDOR)));
   spdlog::info("Supported Extensions:");
 
   int extCount;
   glGetIntegerv(GL_NUM_EXTENSIONS, &extCount);
 
   for (int i = 0; i < extCount; i++) {
-    spdlog::info("\t{}", reinterpret_cast<const char *>(glGetStringi(GL_EXTENSIONS, i)));
+    spdlog::info(
+        "\t{}", reinterpret_cast<const char *>(glGetStringi(GL_EXTENSIONS, i)));
   }
 }

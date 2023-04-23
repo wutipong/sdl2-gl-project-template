@@ -23,18 +23,12 @@ void Scene::Init() {
   glBindVertexArray(vao);
   glGenBuffers(1, &vbo);
 
-  // clang-format off
-  float vertices[] = {
-    -1.0f, -1.0f,
-    1.0f, -1.0f,
-    0.0f, 1.0f,
-  };
-  // clang-format on
-
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), reinterpret_cast<void*>(sizeof(float)*3));
   glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
 }
 
 void Scene::CleanUp() {
@@ -47,17 +41,44 @@ void Scene::CleanUp() {
 }
 
 void Scene::DoFrame(const FrameContext &ctx) {
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LESS);  
+
+  constexpr float horizontal_fov = glm::pi<float>() / 2.0f;
+  const float aspect = (float)ctx.windowWidth / (float)ctx.windowHeight;
+
+  auto projection = glm::perspective(horizontal_fov, aspect, 0.1f, 1000.0f);
+  auto view = glm::lookAt(glm::vec3{5, 5, 5}, glm::vec3{0, 0, 0}, glm::vec3{0, 1, 0});
+  auto projectView = projection * view;
+
+  auto world = glm::identity<glm::mat4>();
+
   glBindVertexArray(vao);
   glUseProgram(program);
 
-  auto uniform = glGetUniformLocation(program, "in_Color");
+  auto uColor = glGetUniformLocation(program, "in_Color");
+  auto uViewProjection = glGetUniformLocation(program, "in_ViewProjection");
+  auto uWorld = glGetUniformLocation(program, "in_World");
+  auto uLightDirection = glGetUniformLocation(program, "in_LightDirection");
+  auto uAmbientIntensity = glGetUniformLocation(program, "in_AmbientIntensity");
 
-  glUniform4f(uniform, color.r, color.g, color.b, color.a);
-  glDrawArrays(GL_TRIANGLES, 0, 3);
+  auto normalized = glm::normalize(lightDir);
+
+  glCullFace(GL_BACK);
+
+  glUniformMatrix4fv(uViewProjection, 1, false, glm::value_ptr(projectView));
+  glUniformMatrix4fv(uWorld, 1, false, glm::value_ptr(world));
+  glUniform4f(uColor, color.r, color.g, color.b, color.a);
+  glUniform4f(uLightDirection, normalized.r, normalized.g, normalized.b, normalized.a);
+  glUniform1f(uAmbientIntensity, ambient);
+
+  glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 }
 
 void Scene::DoUI() {
   ImGui::Begin("Editor");
   ImGui::ColorPicker4("Color", glm::value_ptr(color), ImGuiColorEditFlags_Float);
+  ImGui::DragFloat3("Direction", glm::value_ptr(lightDir), 0.01f, -1.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
+  ImGui::DragFloat("Ambient", &ambient, 0.01f, 0.0f, 0.5f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
   ImGui::End();
 }

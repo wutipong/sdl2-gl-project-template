@@ -19,6 +19,8 @@ public:
 
 private:
   glm::vec4 color{1.0f, 1.0f, 1.0f, 1.0f};
+  glm::vec4 lightDir{0, -1.0f, 0, 0};
+  float ambient = 0.10f;
 
   GLuint program;
   GLuint vertShader;
@@ -26,4 +28,52 @@ private:
 
   GLuint vao;
   GLuint vbo;
+
+  // clang-format off
+  static constexpr float vertices[] = {
+    /* position      **  normal        */
+    -1.0f,-1.0f,-1.0f, -1.0f, 0.0f, 0.0f,
+    -1.0f,-1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
+    -1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
+     1.0f, 1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
+    -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
+    -1.0f, 1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
+     1.0f,-1.0f, 1.0f,  0.0f,-1.0f, 0.0f,
+    -1.0f,-1.0f,-1.0f,  0.0f,-1.0f, 0.0f,
+     1.0f,-1.0f,-1.0f,  0.0f,-1.0f, 0.0f,
+     1.0f, 1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
+     1.0f,-1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
+    -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
+    -1.0f,-1.0f,-1.0f, -1.0f, 0.0f, 0.0f,
+    -1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
+    -1.0f, 1.0f,-1.0f, -1.0f, 0.0f, 0.0f,
+     1.0f,-1.0f, 1.0f,  0.0f,-1.0f, 0.0f,
+    -1.0f,-1.0f, 1.0f,  0.0f,-1.0f, 0.0f,
+    -1.0f,-1.0f,-1.0f,  0.0f,-1.0f, 0.0f,
+    -1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+    -1.0f,-1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+     1.0f,-1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+     1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
+     1.0f,-1.0f,-1.0f,  1.0f, 0.0f, 0.0f,
+     1.0f, 1.0f,-1.0f,  1.0f, 0.0f, 0.0f,
+     1.0f,-1.0f,-1.0f,  1.0f, 0.0f, 0.0f,
+     1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
+     1.0f,-1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
+     1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
+     1.0f, 1.0f,-1.0f,  0.0f, 1.0f, 0.0f,
+    -1.0f, 1.0f,-1.0f,  0.0f, 1.0f, 0.0f,
+     1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
+    -1.0f, 1.0f,-1.0f,  0.0f, 1.0f, 0.0f,
+    -1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
+     1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+    -1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+     1.0f,-1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+  };
+  // clang-format on
+
+  static constexpr int componentPerVector = 3;
+  static constexpr int componentPerVertex = 2 * componentPerVector;
+  static constexpr int componentCount = sizeof(vertices) / sizeof(float);
+  static constexpr int vertexCount = componentCount / componentPerVertex;
+  static constexpr int triangleCount = vertexCount / 3;
 };
