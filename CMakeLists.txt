@@ -37,7 +37,7 @@ set_property(TARGET main PROPERTY CXX_STANDARD 20)
 set_property(TARGET main PROPERTY CXX_STANDARD_REQUIRED ON)
 
 if (MSVC)
-	set_property(TARGET main PROPERTY WIN32_EXECUTABLE ON)
+	# set_property(TARGET main PROPERTY WIN32_EXECUTABLE ON)
 	target_compile_options(main PRIVATE /Zc:__cplusplus)
 endif()
 
