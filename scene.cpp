@@ -71,8 +71,8 @@ constexpr glm::vec4 ClearColor = {0.33f, 0.67f, 1.0f, 1.00f};
 } // namespace
 
 void Scene::Init() {
-  vertShader = shader::LoadSource("shaders/shader.vert", GL_VERTEX_SHADER);
-  fragShader = shader::LoadSource("shaders/shader.frag", GL_FRAGMENT_SHADER);
+  vertShader = Shader::LoadSource("shaders/shader.vert", GL_VERTEX_SHADER);
+  fragShader = Shader::LoadSource("shaders/shader.frag", GL_FRAGMENT_SHADER);
 
   program = glCreateProgram();
   glAttachShader(program, vertShader);

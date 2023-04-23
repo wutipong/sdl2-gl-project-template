@@ -5,16 +5,16 @@
 
 #include "io_util.hpp"
 
-namespace shader {
+namespace Shader {
 GLuint Compile(const GLenum &type, const std::string &srcStr);
 }
 
-GLuint shader::FromSource(const std::string &code, const GLenum &shaderType) {
+GLuint Shader::FromSource(const std::string &code, const GLenum &shaderType) {
   spdlog::info("Creating shader: {}.", code);
   return Compile(shaderType, code);
 }
 
-GLuint shader::LoadSource(const std::string &path, const GLenum &type) {
+GLuint Shader::LoadSource(const std::string &path, const GLenum &type) {
   spdlog::info("Loading shader: {}.", path);
 
   std::string srcStr;
@@ -23,7 +23,7 @@ GLuint shader::LoadSource(const std::string &path, const GLenum &type) {
   return Compile(type, srcStr);
 }
 
-GLuint shader::Compile(const GLenum &type, const std::string &srcStr) {
+GLuint Shader::Compile(const GLenum &type, const std::string &srcStr) {
   auto shader = glCreateShader(type);
   auto src = srcStr.data();
 
