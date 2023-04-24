@@ -1,9 +1,8 @@
 #pragma once
-#include <GL/gl3w.h>
-#include <SDL2/SDL.h>
-#include <glm/glm.hpp>
+union SDL_Event;
 
 namespace Scene {
+constexpr bool HasUI = true;
 
 struct FrameContext {
   const SDL_Event &event;
@@ -11,8 +10,6 @@ struct FrameContext {
   const int windowHeight;
   const float frameTime;
 };
-
-constexpr bool HasUI = false;
 
 void Init();
 void CleanUp();
