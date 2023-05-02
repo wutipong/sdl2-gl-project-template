@@ -17,7 +17,11 @@ constexpr char GlslVersion[] = "#version 410";
 constexpr int GlMajorVersion = 4;
 constexpr int GlMinorVersion = 5;
 
+constexpr bool EnableGLDebug = false;
+
 void PrintDeviceInformation();
+void GLDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message,
+                     const void *userParam);
 
 int main(int argc, char **argv) {
   SDL_Init(SDL_INIT_EVERYTHING);
@@ -35,6 +39,10 @@ int main(int argc, char **argv) {
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+
+  if (EnableGLDebug) {
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+  }
 
   SDL_Window *window =
       SDL_CreateWindow("sdl2-gl-project-template", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WindowWidth,
@@ -55,6 +63,8 @@ int main(int argc, char **argv) {
   gl3wInit();
 
   PrintDeviceInformation();
+
+  glDebugMessageCallback(GLDebugCallback, nullptr);
 
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
@@ -132,4 +142,89 @@ void PrintDeviceInformation() {
   for (int i = 0; i < extCount; i++) {
     spdlog::info("\t{}", reinterpret_cast<const char *>(glGetStringi(GL_EXTENSIONS, i)));
   }
+}
+
+void GLDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message,
+                     const void *userParam) {
+
+  std::string messageStr = message;
+
+  spdlog::level::level_enum level;
+  switch (severity) {
+  case GL_DEBUG_SEVERITY_HIGH:
+    level = spdlog::level::critical;
+    break;
+  case GL_DEBUG_SEVERITY_MEDIUM:
+    level = spdlog::level::err;
+    break;
+  case GL_DEBUG_SEVERITY_LOW:
+    level = spdlog::level::warn;
+    break;
+  case GL_DEBUG_SEVERITY_NOTIFICATION:
+    level = spdlog::level::info;
+    break;
+  }
+
+  std::string typeStr;
+  switch (type) {
+  case GL_DEBUG_TYPE_ERROR:
+    typeStr = "error";
+    break;
+
+  case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+    typeStr = "deprecated behavior";
+    break;
+
+  case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+    typeStr = "undefined behavior";
+    break;
+
+  case GL_DEBUG_TYPE_PORTABILITY:
+    typeStr = "portability";
+    break;
+
+  case GL_DEBUG_TYPE_PERFORMANCE:
+    typeStr = "performance";
+    break;
+
+  case GL_DEBUG_TYPE_MARKER:
+    typeStr = "marker";
+    break;
+
+  case GL_DEBUG_TYPE_PUSH_GROUP:
+    typeStr = "push group";
+    break;
+
+  case GL_DEBUG_TYPE_POP_GROUP:
+    typeStr = "pop group";
+    break;
+
+  case GL_DEBUG_TYPE_OTHER:
+    typeStr = "other";
+    break;
+  }
+
+  std::string sourceStr;
+  switch (source) {
+  case GL_DEBUG_SOURCE_API:
+    sourceStr = "api";
+    break;
+  case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+    sourceStr = "window system";
+    break;
+  case GL_DEBUG_SOURCE_SHADER_COMPILER:
+    sourceStr = "compiler";
+    break;
+  case GL_DEBUG_SOURCE_THIRD_PARTY:
+    sourceStr = "third party";
+    break;
+  case GL_DEBUG_SOURCE_APPLICATION:
+    sourceStr = "application";
+    break;
+  case GL_DEBUG_SOURCE_OTHER:
+    sourceStr = "other";
+    break;
+  }
+
+  spdlog::log(level, "[{:08d}] [{}] [{}] - {}", id, typeStr, sourceStr, messageStr);
 }
