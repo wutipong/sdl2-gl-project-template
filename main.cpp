@@ -66,12 +66,14 @@ int main(int argc, char **argv) {
 
   glDebugMessageCallback(GLDebugCallback, nullptr);
 
-  IMGUI_CHECKVERSION();
-  ImGui::CreateContext();
-  ImGuiIO &io = ImGui::GetIO();
+  if (Scene::HasUI) {
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO &io = ImGui::GetIO();
 
-  ImGui_ImplSDL2_InitForOpenGL(window, glCtx);
-  ImGui_ImplOpenGL3_Init(GlslVersion);
+    ImGui_ImplSDL2_InitForOpenGL(window, glCtx);
+    ImGui_ImplOpenGL3_Init(GlslVersion);
+  }
 
   Scene::Init();
 
@@ -80,19 +82,24 @@ int main(int argc, char **argv) {
   while (true) {
     SDL_Event event;
     if (SDL_PollEvent(&event)) {
-      ImGui_ImplSDL2_ProcessEvent(&event);
+      if (Scene::HasUI) {
+        ImGui_ImplSDL2_ProcessEvent(&event);
+      }
+
       if (event.type == SDL_QUIT)
         break;
     }
 
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplSDL2_NewFrame(window);
-    ImGui::NewFrame();
+    if (Scene::HasUI) {
+      ImGui_ImplOpenGL3_NewFrame();
+      ImGui_ImplSDL2_NewFrame(window);
+      ImGui::NewFrame();
 
-    Scene::DoUI();
+      Scene::DoUI();
 
-    ImGui::EndFrame();
-    ImGui::Render();
+      ImGui::EndFrame();
+      ImGui::Render();
+    }
 
     int actualWidth, actualHeight;
     SDL_GetWindowSize(window, &actualWidth, &actualHeight);
@@ -108,7 +115,9 @@ int main(int argc, char **argv) {
 
     lastFrame = now;
 
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    if (Scene::HasUI) {
+      ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    }
 
     SDL_GL_SwapWindow(window);
     SDL_Delay(1);
@@ -116,9 +125,11 @@ int main(int argc, char **argv) {
 
   Scene::CleanUp();
 
-  ImGui_ImplOpenGL3_Shutdown();
-  ImGui_ImplSDL2_Shutdown();
-  ImGui::DestroyContext();
+  if (Scene::HasUI) {
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
+  }
 
   SDL_GL_DeleteContext(glCtx);
   SDL_DestroyWindow(window);
@@ -128,7 +139,6 @@ int main(int argc, char **argv) {
 }
 
 void PrintDeviceInformation() {
-
   spdlog::info("OpenGL Device Information.");
   spdlog::info("\tOpenGL: {}", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
   spdlog::info("\tGLSL: {}", reinterpret_cast<const char *>(glGetString(GL_SHADING_LANGUAGE_VERSION)));

@@ -11,6 +11,14 @@ Above libraries are configured using [Vcpkg](https://github.com/microsoft/vcpkg)
 
 ## Usage
 
+### Using Github template feature.
+
+1. Clone this repository into your Github account.
+2. Create a new project on Github with this project template.
+3. Update the file `vcpkg.json` and `CMakeLists.txt` file to change the project name.
+
+### Manual Repository Setup
+
 1. Clone this repository.
 2. Remove the `origin` remote of your project so it does not point to the template repository.
 3. Update the file `vcpkg.json` and `CMakeLists.txt` file to change the project name.
@@ -23,7 +31,7 @@ Also since we use `Vcpkg` as the package management, you can also add new depend
 
 ### Using IDE
 
-Visual Studio 2019 and Visual Studio Code supports CMake project directly, given that the right components are installed. Simply use `Open Folder` menu to open the project file inside.
+Visual Studio 2022 and Visual Studio Code supports CMake project directly, given that the right components are installed. Simply use `Open Folder` menu to open the project file inside.
 
 ### Manually configure
 * install `cmake`.
@@ -32,15 +40,17 @@ Visual Studio 2019 and Visual Studio Code supports CMake project directly, given
 
 ## Working with the project
 
-Inside the file `main.cpp`, there are two commented sections. `//Begin UI ... //End UI` defines where to put `ImGUI`-based user interface code in, and `//Begin Draw ... //End Draw` designate where to put your drawing code in.
+Update the file `scene.cpp` to meet your requirement. 
 
-Also the same file, the variable `event` will be populated at the begining of the main loop. You can use this variable if you have to handle input events.
+* `Init()` contains the initialization code.
+* `DoFrame()` contains code that run each time a new frame is rendering.
+* `DoUI()` contains the DearImGui code to perform user interface.
+* `CleanUp()` contains the clean-up code.
+
+Also if you don't need Dear ImGui-based UI, change the value of `HasUI` variable inside `scene.hpp` to `false`.
 
 The project is configured to uses OpenGL 4.5. In the case that you have to work with different version, change the value of `GlMajorVersion`, `GlMinorVersion` and `GlslVersion` to the version you are using.
 
 The `shaders` directory is where you're supposed to put shader files in. Any files in this directory will be copied to the build directory. This is preconfigured inside the `CMakeLists.txt` and can be changed or removed.
 
-Last but not least, in the case that you need to add more file into the project, update the `CMakeLists.txt` file to accomodate those new files. If you're using VS2009, the IDE will be doing that for you (unless it can't figure out how).
-
-## NOTICE
-This project contains files taken from `Dear ImGui` project, which is also released under MIT license.
+Last but not least, in the case that you need to add more file into the project, update the `CMakeLists.txt` file to accomodate those new files. If you're using VS2022, the IDE will be doing that for you (unless it can't figure out how).

@@ -1,9 +1,8 @@
 #pragma once
-#include <GL/gl3w.h>
-#include <SDL2/SDL.h>
-#include <glm/glm.hpp>
+union SDL_Event;
 
 namespace Scene {
+constexpr bool HasUI = true;
 
 struct FrameContext {
   const SDL_Event &event;
