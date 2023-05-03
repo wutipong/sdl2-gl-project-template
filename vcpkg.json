@@ -6,6 +6,7 @@
     "glm",
     "spdlog",
     "fmt",
+    "imguizmo",
     {
       "name": "imgui",
       "features": [

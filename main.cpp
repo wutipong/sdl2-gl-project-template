@@ -69,7 +69,6 @@ int main(int argc, char **argv) {
   if (Scene::HasUI) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO &io = ImGui::GetIO();
 
     ImGui_ImplSDL2_InitForOpenGL(window, glCtx);
     ImGui_ImplOpenGL3_Init(GlslVersion);

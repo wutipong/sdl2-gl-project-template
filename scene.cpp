@@ -8,12 +8,13 @@
 #include <imgui.h>
 #include <vector>
 
+#include "ImGuizmo.h"
 #include "io_util.hpp"
 #include "shader.hpp"
 
 namespace {
 glm::vec4 color{1.0f, 1.0f, 1.0f, 1.0f};
-glm::vec4 lightDir{0, -1.0f, 0, 0};
+glm::vec4 lightDir{0, -1.0f, 0.75f, 0};
 float ambient = 0.10f;
 
 GLuint program;
@@ -22,6 +23,9 @@ GLuint fragShader;
 
 GLuint vao;
 GLuint vbo;
+
+auto view = glm::lookAt(glm::vec3{5, 0, 0}, glm::vec3{0, 0, 0}, glm::vec3{0, 1, 0});
+auto world = glm::identity<glm::mat4>();
 
 // clang-format off
 constexpr float vertices[] = {
@@ -116,11 +120,8 @@ void Scene::DoFrame(const FrameContext &ctx) {
   constexpr float horizontal_fov = glm::pi<float>() / 2.0f;
   const float aspect = (float)ctx.windowWidth / (float)ctx.windowHeight;
 
-  auto projection = glm::perspective(horizontal_fov, aspect, 0.1f, 1000.0f);
-  auto view = glm::lookAt(glm::vec3{5, 5, 5}, glm::vec3{0, 0, 0}, glm::vec3{0, 1, 0});
+  auto projection = glm::perspective<float>(horizontal_fov, aspect, 0.1f, 1000.0f);
   auto projectView = projection * view;
-
-  auto world = glm::identity<glm::mat4>();
 
   glBindVertexArray(vao);
   glUseProgram(program);
@@ -143,6 +144,14 @@ void Scene::DoFrame(const FrameContext &ctx) {
 }
 
 void Scene::DoUI() {
+  const ImGuiIO &io = ImGui::GetIO();
+
+  const ImVec2 gizmoSize = {200, 200};
+  const ImVec2 gizmoPosition = {io.DisplaySize.x - gizmoSize.x, io.DisplaySize.y - gizmoSize.y};
+
+  ImGuizmo::BeginFrame();
+  ImGuizmo::ViewManipulate(glm::value_ptr(view), 5, gizmoPosition, gizmoSize, 0x80000000);
+
   ImGui::Begin("Lighting");
   ImGui::ColorPicker4("Color", glm::value_ptr(color), ImGuiColorEditFlags_Float);
   ImGui::DragFloat3("Direction", glm::value_ptr(lightDir), 0.01f, -1.0f, 1.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);

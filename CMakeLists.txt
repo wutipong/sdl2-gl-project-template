@@ -20,12 +20,14 @@ find_package(gl3w CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
+find_package(imguizmo CONFIG REQUIRED)
 
 target_link_libraries(main PRIVATE 
     SDL2::SDL2 
     SDL2::SDL2main 
     OpenGL::GL
-    imgui::imgui 
+    imgui::imgui
+    imguizmo::imguizmo
     unofficial::gl3w::gl3w 
     spdlog::spdlog 
     spdlog::spdlog_header_only
