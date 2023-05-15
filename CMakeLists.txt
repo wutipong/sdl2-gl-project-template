@@ -43,15 +43,26 @@ if (MSVC)
 	target_compile_options(main PRIVATE /Zc:__cplusplus)
 endif()
 
-file(GLOB_RECURSE GLSL_SOURCE_FILES
-    "shaders/*.frag"
-    "shaders/*.vert"
-)
+function(compile_shaders)
+    set(oneValueArgs TARGET TARGET)
+    set(multiValueArgs TARGET INPUT)
+    set(oneValueArgs DESTINATION DESTINATION)
 
-add_custom_target(SHADER_COMPILE 
-    SOURCES ${GLSL_SOURCE_FILES} 
-    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/shaders/"
-    COMMAND ${CMAKE_COMMAND} -E copy ${GLSL_SOURCE_FILES} "${CMAKE_CURRENT_BINARY_DIR}/shaders/"
-)
+    cmake_parse_arguments(COMPILE_SHADERS "${options}" "${oneValueArgs}"
+            "${multiValueArgs}" ${ARGN}
+            )
 
-add_dependencies(main SHADER_COMPILE)
+    file(GLOB GLSL_SOURCE_FILES ${COMPILE_SHADERS_INPUT})
+
+    add_custom_target(${COMPILE_SHADERS_TARGET}
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/${COMPILE_SHADERS_DESTINATION}/"
+            COMMAND ${CMAKE_COMMAND} -E copy ${GLSL_SOURCE_FILES} "${CMAKE_CURRENT_BINARY_DIR}/${COMPILE_SHADERS_DESTINATION}/"
+            )
+    add_dependencies(main ${COMPILE_SHADERS_TARGET})
+endfunction()
+
+compile_shaders(
+        TARGET CompileBasicShader
+        DESTINATION "shaders/frag"
+        INPUT "shaders/shader.vert" "shaders/shader.frag"
+)   
