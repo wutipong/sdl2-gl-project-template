@@ -51,6 +51,8 @@ GLuint Shader::Compile(const GLenum &type, const std::string &srcStr) {
 }
 
 GLuint Shader::LoadBinary(const std::string &path, const GLenum &shaderType, const std::string &entryPoint) {
+  spdlog::info("Loading binary shader: {}.", path);
+
   auto shader = glCreateShader(shaderType);
   std::vector<GLchar> buffer;
   buffer.reserve(2 * 1'024);
