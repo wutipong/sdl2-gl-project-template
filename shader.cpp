@@ -49,3 +49,32 @@ GLuint Shader::Compile(const GLenum &type, const std::string &srcStr) {
 
   return shader;
 }
+
+GLuint Shader::LoadBinary(const std::string &path, const GLenum &shaderType, const std::string &entryPoint) {
+  auto shader = glCreateShader(shaderType);
+  std::vector<GLchar> buffer;
+  buffer.reserve(2 * 1'024);
+  LoadFile(path, buffer, std::ios::in | std::ios::binary);
+
+  glShaderBinary(1, &shader, GL_SHADER_BINARY_FORMAT_SPIR_V, buffer.data(), static_cast<GLsizei>(buffer.size()));
+  glSpecializeShader(shader, entryPoint.c_str(), 0, nullptr, nullptr);
+
+  GLint compileStatus;
+  glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
+
+  if (compileStatus == GL_FALSE) {
+    spdlog::error("Shader compile failed.");
+  }
+
+  GLint logLength;
+  glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logLength);
+  if (logLength > 0) {
+    std::string log;
+    log.resize(logLength);
+
+    glGetShaderInfoLog(shader, static_cast<GLsizei>(log.size()), &logLength, log.data());
+    spdlog::debug("Shader Log {}.", log);
+  }
+
+  return shader;
+}

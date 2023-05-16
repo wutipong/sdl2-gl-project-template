@@ -79,19 +79,8 @@ constexpr glm::vec4 ClearColor = {0.33f, 0.67f, 1.0f, 1.00f};
 } // namespace
 
 void Scene::Init() {
-  vertShader = glCreateShader(GL_VERTEX_SHADER);
-  fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-  std::vector<GLchar> buffer;
-  LoadFile("shaders/shader.vert.spv", buffer, std::ios::in | std::ios::binary);
-
-  glShaderBinary(1, &vertShader, GL_SHADER_BINARY_FORMAT_SPIR_V, buffer.data(), buffer.size());
-  glSpecializeShader(vertShader, "main", 0, nullptr, nullptr);
-
-  LoadFile("shaders/shader.frag.spv", buffer, std::ios::in | std::ios::binary);
-
-  glShaderBinary(1, &fragShader, GL_SHADER_BINARY_FORMAT_SPIR_V, buffer.data(), buffer.size());
-  glSpecializeShader(fragShader, "main", 0, nullptr, nullptr);
+  vertShader = Shader::LoadBinary("shaders/shader.vert.spv", GL_VERTEX_SHADER);
+  fragShader = Shader::LoadBinary("shaders/shader.frag.spv", GL_FRAGMENT_SHADER);
 
   program = glCreateProgram();
   glAttachShader(program, vertShader);
