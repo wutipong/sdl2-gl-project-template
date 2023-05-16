@@ -76,6 +76,12 @@ constexpr int componentCount = sizeof(vertices) / sizeof(float);
 constexpr int vertexCount = componentCount / componentPerVertex;
 
 constexpr glm::vec4 ClearColor = {0.33f, 0.67f, 1.0f, 1.00f};
+
+GLint uColor;
+GLint uViewProjection;
+GLint uWorld;
+GLint uLightDirection;
+GLint uAmbientIntensity;
 } // namespace
 
 void Scene::Init() {
@@ -86,7 +92,13 @@ void Scene::Init() {
   glAttachShader(program, vertShader);
   glAttachShader(program, fragShader);
 
-  glLinkProgram(program);
+  Shader::LinkProgram(program);
+
+  uColor = glGetUniformLocation(program, "in_Color");
+  uViewProjection = glGetUniformLocation(program, "in_ViewProjection");
+  uWorld = glGetUniformLocation(program, "in_World");
+  uLightDirection = glGetUniformLocation(program, "in_LightDirection");
+  uAmbientIntensity = glGetUniformLocation(program, "in_AmbientIntensity");
 
   glCreateVertexArrays(1, &vao);
   glBindVertexArray(vao);
@@ -126,12 +138,6 @@ void Scene::DoFrame(const FrameContext &ctx) {
 
   glBindVertexArray(vao);
   glUseProgram(program);
-
-  auto uColor = glGetUniformLocation(program, "in_Color");
-  auto uViewProjection = glGetUniformLocation(program, "in_ViewProjection");
-  auto uWorld = glGetUniformLocation(program, "in_World");
-  auto uLightDirection = glGetUniformLocation(program, "in_LightDirection");
-  auto uAmbientIntensity = glGetUniformLocation(program, "in_AmbientIntensity");
 
   auto normalized = glm::normalize(lightDir);
 
