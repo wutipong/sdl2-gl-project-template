@@ -1,11 +1,12 @@
 #version 450 core
 
-in vec4 ex_Color;
-in vec3 ex_Normal;
-out vec4 fragColor;
+layout(location = 0) in vec4 ex_Color;
+layout(location = 1) in vec3 ex_Normal;
 
-uniform vec4 in_LightDirection;
-uniform float in_AmbientIntensity;
+layout(location = 0) out vec4 fragColor;
+
+layout(location = 3) uniform vec4 in_LightDirection;
+layout(location = 4) uniform float in_AmbientIntensity;
 
 void main(void) {
   float intensity = dot(-ex_Normal, in_LightDirection.xyz);

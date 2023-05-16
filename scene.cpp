@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
+#include <spdlog/spdlog.h>
 #include <vector>
 
 #include "ImGuizmo.h"
@@ -78,18 +79,18 @@ constexpr glm::vec4 ClearColor = {0.33f, 0.67f, 1.0f, 1.00f};
 } // namespace
 
 void Scene::Init() {
-  vertShader = glCreateShader(GL_VERTEX_SHADER); 
+  vertShader = glCreateShader(GL_VERTEX_SHADER);
   fragShader = glCreateShader(GL_FRAGMENT_SHADER);
 
   std::vector<GLchar> buffer;
   LoadFile("shaders/shader.vert.spv", buffer, std::ios::in | std::ios::binary);
 
-  glShaderBinary(1, &vertShader, GL_SPIR_V_BINARY, buffer.data(), buffer.size());
+  glShaderBinary(1, &vertShader, GL_SHADER_BINARY_FORMAT_SPIR_V, buffer.data(), buffer.size());
   glSpecializeShader(vertShader, "main", 0, nullptr, nullptr);
 
   LoadFile("shaders/shader.frag.spv", buffer, std::ios::in | std::ios::binary);
 
-  glShaderBinary(1, &fragShader, GL_SPIR_V_BINARY, buffer.data(), buffer.size());
+  glShaderBinary(1, &fragShader, GL_SHADER_BINARY_FORMAT_SPIR_V, buffer.data(), buffer.size());
   glSpecializeShader(fragShader, "main", 0, nullptr, nullptr);
 
   program = glCreateProgram();

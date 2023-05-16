@@ -62,7 +62,7 @@ function(compile_shaders)
 
     add_custom_target(${COMPILE_SHADERS_TARGET}
             COMMAND ${CMAKE_COMMAND} -E make_directory ${_dir}
-            COMMAND ${GLSL_VALIDATOR} -G -e main --auto-map-locations -l -o "${CMAKE_CURRENT_BINARY_DIR}/${COMPILE_SHADERS_DESTINATION}" -q ${GLSL_SOURCE_FILES}        
+            COMMAND ${GLSL_VALIDATOR} -G -e main -l -o "${CMAKE_CURRENT_BINARY_DIR}/${COMPILE_SHADERS_DESTINATION}" -q ${GLSL_SOURCE_FILES}        
     )
     add_dependencies(main ${COMPILE_SHADERS_TARGET})
 endfunction()
