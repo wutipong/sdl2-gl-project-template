@@ -21,6 +21,9 @@ find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(imguizmo CONFIG REQUIRED)
+find_package(glslang CONFIG REQUIRED)
+
+# target_link_libraries(main PRIVATE glslang::OSDependent glslang::glslang glslang::MachineIndependent glslang::GenericCodeGen glslang::glslang-default-resource-limits glslang::OGLCompiler glslang::SPVRemapper glslang::SPIRV glslang::HLSL)
 
 target_link_libraries(main PRIVATE 
     SDL2::SDL2 
@@ -55,6 +58,7 @@ function(compile_shaders)
     file(GLOB GLSL_SOURCE_FILES ${COMPILE_SHADERS_INPUT})
 
     add_custom_target(${COMPILE_SHADERS_TARGET}
+            COMMAND glslangValidator --version
             COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/${COMPILE_SHADERS_DESTINATION}/"
             COMMAND ${CMAKE_COMMAND} -E copy ${GLSL_SOURCE_FILES} "${CMAKE_CURRENT_BINARY_DIR}/${COMPILE_SHADERS_DESTINATION}/"
             )

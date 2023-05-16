@@ -4,6 +4,7 @@
     "opengl",
     "gl3w",
     "glm",
+    "glslang",
     "spdlog",
     "fmt",
     "imguizmo",
