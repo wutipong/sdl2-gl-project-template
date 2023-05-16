@@ -13,7 +13,7 @@ constexpr char ProjectName[] = "sdl-gl-project-template";
 constexpr int WindowWidth = 800;
 constexpr int WindowHeight = 600;
 
-constexpr char GlslVersion[] = "#version 410";
+constexpr char GlslVersion[] = "#version 450";
 constexpr int GlMajorVersion = 4;
 constexpr int GlMinorVersion = 5;
 
