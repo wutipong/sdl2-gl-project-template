@@ -58,17 +58,23 @@ function(compile_shaders)
             )
 
     file(GLOB GLSL_SOURCE_FILES ${COMPILE_SHADERS_INPUT})
+    get_filename_component(_dir "${CMAKE_CURRENT_BINARY_DIR}/${COMPILE_SHADERS_DESTINATION}" DIRECTORY)
 
     add_custom_target(${COMPILE_SHADERS_TARGET}
-            COMMAND ${GLSL_VALIDATOR} --version
-            COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/${COMPILE_SHADERS_DESTINATION}/"
-            COMMAND ${CMAKE_COMMAND} -E copy ${GLSL_SOURCE_FILES} "${CMAKE_CURRENT_BINARY_DIR}/${COMPILE_SHADERS_DESTINATION}/"
-            )
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${_dir}
+            COMMAND ${GLSL_VALIDATOR} -G -e main --auto-map-locations -l -o "${CMAKE_CURRENT_BINARY_DIR}/${COMPILE_SHADERS_DESTINATION}" -q ${GLSL_SOURCE_FILES}        
+    )
     add_dependencies(main ${COMPILE_SHADERS_TARGET})
 endfunction()
 
 compile_shaders(
-        TARGET CompileBasicShader
-        DESTINATION "shaders/frag"
-        INPUT "shaders/shader.vert" "shaders/shader.frag"
+        TARGET CompileVertexShader
+        DESTINATION "shaders/shader.vert.spv"
+        INPUT "shaders/shader.vert"
 )   
+
+compile_shaders(
+        TARGET CompileFragmentShader
+        DESTINATION "shaders/shader.frag.spv"
+        INPUT "shaders/shader.frag"
+) 
