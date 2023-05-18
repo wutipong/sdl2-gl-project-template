@@ -105,6 +105,8 @@ int main(int argc, char **argv) {
 
     auto now = SDL_GetTicks64();
 
+    std::string sceneMarker = "Render Frame";
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, static_cast<GLsizei>(sceneMarker.size()), sceneMarker.c_str());
     Scene::DoFrame({
         .event = event,
         .windowWidth = actualWidth,
@@ -112,10 +114,15 @@ int main(int argc, char **argv) {
         .frameTime = ((float)now - (float)lastFrame) / 1000.0f,
     });
 
+    glPopDebugGroup();
+
     lastFrame = now;
 
     if (Scene::HasUI) {
+      std::string uiMarker = "Render UI";
+      glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, static_cast<GLsizei>(uiMarker.size()), uiMarker.c_str());
       ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+      glPopDebugGroup();
     }
 
     SDL_GL_SwapWindow(window);
@@ -200,13 +207,10 @@ void GLDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLs
     typeStr = "marker";
     break;
 
+  // push-pop group are skipped, as it's intended to be used by frame debugger.
   case GL_DEBUG_TYPE_PUSH_GROUP:
-    typeStr = "push group";
-    break;
-
   case GL_DEBUG_TYPE_POP_GROUP:
-    typeStr = "pop group";
-    break;
+    return;
 
   case GL_DEBUG_TYPE_OTHER:
     typeStr = "other";
