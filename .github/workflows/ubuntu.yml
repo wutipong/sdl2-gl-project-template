@@ -1,14 +1,14 @@
 name: ubuntu-build
 on: 
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: true
 
@@ -24,9 +24,9 @@ jobs:
         working-directory: out
 
       - name: Build the project.
-        run: cmake --build $GITHUB_WORKSPACE/out
+        run: cmake --build $GITHUB_WORKSPACE/out --config Release
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: ubuntu
-          path: out
+          path: out/Release
