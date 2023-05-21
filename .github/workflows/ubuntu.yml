@@ -14,19 +14,21 @@ jobs:
 
       - run: "export"
 
-      - run: "sudo apt install -y build-essential cmake curl zip unzip tar libgl-dev"
-
+      - run: "sudo apt install -y build-essential cmake curl zip unzip tar"
+  
+      - run: "sudo apt build-dep -y libsdl2"
+  
       - name: Create output dir
-        run: mkdir out
+        run: mkdir build
         
       - name: Configure the project.
-        run: cmake $GITHUB_WORKSPACE
-        working-directory: out
+        run: cmake $GITHUB_WORKSPACE -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=./out
+        working-directory: build
 
       - name: Build the project.
-        run: cmake --build $GITHUB_WORKSPACE/out --config Release
+        run: cmake --build $GITHUB_WORKSPACE/build --config Release
 
       - uses: actions/upload-artifact@v3
         with:
           name: ubuntu
-          path: out/Release
+          path: $GITHUB_WORKSPACE/build/out
