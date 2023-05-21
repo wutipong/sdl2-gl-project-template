@@ -13,6 +13,8 @@
 #include "io_util.hpp"
 #include "shader.hpp"
 
+#include "model.hpp"
+
 namespace {
 glm::vec4 color{1.0f, 1.0f, 1.0f, 1.0f};
 glm::vec4 lightDir{0, -1.0f, 0.75f, 0};
@@ -84,6 +86,8 @@ constexpr GLint uWorld = 2;
 constexpr GLint uLightDirection = 3;
 constexpr GLint uAmbientIntensity = 4;
 
+tinygltf::Model model;
+tinygltf::TinyGLTF loader;
 } // namespace
 
 void Scene::Init() {
@@ -97,6 +101,8 @@ void Scene::Init() {
   Shader::LinkProgram(program);
 
   glUseProgram(program);
+
+  model = Model::LoadFromFile("assets/Cube.gltf");
 
   glCreateVertexArrays(1, &vao);
   glBindVertexArray(vao);

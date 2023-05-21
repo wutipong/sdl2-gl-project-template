@@ -11,7 +11,7 @@ add_executable(main
 	"main.cpp" 
 	"scene.hpp" "scene.cpp" 
 	"io_util.hpp"
-    "shader.hpp" "shader.cpp")
+    "shader.hpp" "shader.cpp" "model.cpp")
 
 find_package(SDL2 CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
@@ -26,6 +26,9 @@ find_package(glslang CONFIG REQUIRED)
 find_program(GLSL_VALIDATOR glslangValidator REQUIRED)
 
 # target_link_libraries(main PRIVATE glslang::OSDependent glslang::glslang glslang::MachineIndependent glslang::GenericCodeGen glslang::glslang-default-resource-limits glslang::OGLCompiler glslang::SPVRemapper glslang::SPIRV glslang::HLSL)
+
+find_path(TINYGLTF_INCLUDE_DIRS "tiny_gltf.h")
+target_include_directories(main PRIVATE ${TINYGLTF_INCLUDE_DIRS})
 
 target_link_libraries(main PRIVATE 
     SDL2::SDL2 
@@ -88,6 +91,15 @@ copy_resources(
         DESTINATION "shaders"
         INPUT "shaders/shader.vert" "shaders/shader.frag"
 )   
+
+copy_resources(
+        TARGET CopyAssets
+        DESTINATION "assets"
+        INPUT "assets/Cube_BaseColor.png"
+            "assets/Cube_MetallicRoughness.png"
+            "assets/Cube.bin"
+            "assets/Cube.gltf"
+)
 compile_shaders(
         TARGET CompileVertexShader
         DESTINATION "shaders/shader.vert.spv"
