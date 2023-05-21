@@ -8,23 +8,21 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: true
 
-      - run: "export"
-
       - name: Create output dir
-        run: mkdir out
+        run: mkdir build
         
       - name: Configure the project.
-        run: cmake $GITHUB_WORKSPACE
-        working-directory: out
+        run: cmake $GITHUB_WORKSPACE -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=./out
+        working-directory: build
 
       - name: Build the project.
-        run: cmake --build out --config Release
+        run: cmake --build build --config Release
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: macos
-          path: out/Release
+          path: build/out
