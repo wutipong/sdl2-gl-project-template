@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
+#include <spdlog/spdlog.h>
 #include <vector>
 
 #include "ImGuizmo.h"
@@ -75,17 +76,27 @@ constexpr int componentCount = sizeof(vertices) / sizeof(float);
 constexpr int vertexCount = componentCount / componentPerVertex;
 
 constexpr glm::vec4 ClearColor = {0.33f, 0.67f, 1.0f, 1.00f};
+
+// Uniform locations.
+constexpr GLint uColor = 0;
+constexpr GLint uViewProjection = 1;
+constexpr GLint uWorld = 2;
+constexpr GLint uLightDirection = 3;
+constexpr GLint uAmbientIntensity = 4;
+
 } // namespace
 
 void Scene::Init() {
-  vertShader = Shader::LoadSource("shaders/shader.vert", GL_VERTEX_SHADER);
-  fragShader = Shader::LoadSource("shaders/shader.frag", GL_FRAGMENT_SHADER);
+  vertShader = Shader::LoadBinary("shaders/shader.vert.spv", GL_VERTEX_SHADER);
+  fragShader = Shader::LoadBinary("shaders/shader.frag.spv", GL_FRAGMENT_SHADER);
 
   program = glCreateProgram();
   glAttachShader(program, vertShader);
   glAttachShader(program, fragShader);
 
-  glLinkProgram(program);
+  Shader::LinkProgram(program);
+
+  glUseProgram(program);
 
   glCreateVertexArrays(1, &vao);
   glBindVertexArray(vao);
@@ -125,12 +136,6 @@ void Scene::DoFrame(const FrameContext &ctx) {
 
   glBindVertexArray(vao);
   glUseProgram(program);
-
-  auto uColor = glGetUniformLocation(program, "in_Color");
-  auto uViewProjection = glGetUniformLocation(program, "in_ViewProjection");
-  auto uWorld = glGetUniformLocation(program, "in_World");
-  auto uLightDirection = glGetUniformLocation(program, "in_LightDirection");
-  auto uAmbientIntensity = glGetUniformLocation(program, "in_AmbientIntensity");
 
   auto normalized = glm::normalize(lightDir);
 
