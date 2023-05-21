@@ -14,9 +14,7 @@ jobs:
 
       - run: "export"
 
-      - run: "sudo apt install -y build-essential cmake curl zip unzip tar"
-  
-      - run: "sudo apt build-dep -y libsdl2"
+      - run: "sudo apt install -y build-essential cmake curl zip unzip tar libgl-dev"
   
       - name: Create output dir
         run: mkdir build
