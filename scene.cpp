@@ -77,11 +77,13 @@ constexpr int vertexCount = componentCount / componentPerVertex;
 
 constexpr glm::vec4 ClearColor = {0.33f, 0.67f, 1.0f, 1.00f};
 
-GLint uColor;
-GLint uViewProjection;
-GLint uWorld;
-GLint uLightDirection;
-GLint uAmbientIntensity;
+// Uniform locations.
+constexpr GLint uColor = 0;
+constexpr GLint uViewProjection = 1;
+constexpr GLint uWorld = 2;
+constexpr GLint uLightDirection = 3;
+constexpr GLint uAmbientIntensity = 4;
+
 } // namespace
 
 void Scene::Init() {
@@ -94,11 +96,7 @@ void Scene::Init() {
 
   Shader::LinkProgram(program);
 
-  uColor = glGetUniformLocation(program, "in_Color");
-  uViewProjection = glGetUniformLocation(program, "in_ViewProjection");
-  uWorld = glGetUniformLocation(program, "in_World");
-  uLightDirection = glGetUniformLocation(program, "in_LightDirection");
-  uAmbientIntensity = glGetUniformLocation(program, "in_AmbientIntensity");
+  glUseProgram(program);
 
   glCreateVertexArrays(1, &vao);
   glBindVertexArray(vao);

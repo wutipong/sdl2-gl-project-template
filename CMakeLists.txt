@@ -48,6 +48,24 @@ if (MSVC)
 	target_compile_options(main PRIVATE /Zc:__cplusplus)
 endif()
 
+function(compile_shaders)
+    set(oneValueArgs TARGET TARGET)
+    set(multiValueArgs TARGET INPUT)
+    set(oneValueArgs DESTINATION DESTINATION)
+
+    cmake_parse_arguments(COMPILE_SHADERS "${options}" "${oneValueArgs}"
+            "${multiValueArgs}" ${ARGN}
+            )
+
+    file(GLOB COMPILE_SHADERS_INPUT_FILES ${COMPILE_SHADERS_INPUT})
+    get_filename_component(_dir "$<TARGET_FILE_DIR:main>/${COMPILE_SHADERS_DESTINATION}" DIRECTORY)
+
+    add_custom_target(${COMPILE_SHADERS_TARGET} ALL
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${_dir}
+            COMMAND ${GLSL_VALIDATOR} -G -e main -l -o "$<TARGET_FILE_DIR:main>/${COMPILE_SHADERS_DESTINATION}" -q ${COMPILE_SHADERS_INPUT_FILES}        
+    )
+endfunction()
+
 function(copy_resources)
     set(oneValueArgs TARGET TARGET)
     set(multiValueArgs TARGET INPUT)
@@ -58,19 +76,11 @@ function(copy_resources)
             )
 
     file(GLOB COPY_RESOURCES_INPUT_FILES ${COPY_RESOURCES_INPUT})
-    file(GLOB GLSL_SOURCE_FILES ${COMPILE_SHADERS_INPUT})
-    get_filename_component(_dir "${CMAKE_CURRENT_BINARY_DIR}/${COMPILE_SHADERS_DESTINATION}" DIRECTORY)
 
     add_custom_target(${COPY_RESOURCES_TARGET} ALL
             COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:main>/${COPY_RESOURCES_DESTINATION}/"
             COMMAND ${CMAKE_COMMAND} -E copy ${COPY_RESOURCES_INPUT_FILES} "$<TARGET_FILE_DIR:main>/${COPY_RESOURCES_DESTINATION}/"
-            )
-
-    add_custom_target(${COMPILE_SHADERS_TARGET}
-            COMMAND ${CMAKE_COMMAND} -E make_directory ${_dir}
-            COMMAND ${GLSL_VALIDATOR} -G -e main -l -o "${CMAKE_CURRENT_BINARY_DIR}/${COMPILE_SHADERS_DESTINATION}" -q ${GLSL_SOURCE_FILES}        
     )
-    add_dependencies(main ${COMPILE_SHADERS_TARGET})
 endfunction()
 
 copy_resources(
