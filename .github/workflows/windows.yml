@@ -23,9 +23,6 @@ jobs:
       - name: Build the project.
         run: cmake --build out --config Release
 
-      - name: Copy shader files.
-        run: xcopy shaders out\Release\shaders\*
-
       - uses: actions/upload-artifact@v2
         with:
           name: windows
