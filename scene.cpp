@@ -27,56 +27,12 @@ GLuint fragShader;
 GLuint vao;
 GLuint vbo;
 
+size_t elementOffset;
+GLsizei elementCount;
+GLenum elementType;
+
 auto view = glm::lookAt(glm::vec3{5, 0, 0}, glm::vec3{0, 0, 0}, glm::vec3{0, 1, 0});
 auto world = glm::identity<glm::mat4>();
-
-// clang-format off
-constexpr float vertices[] = {
-  /* position       **  normal       */
-  -1.0f,-1.0f,-1.0f, -1.0f, 0.0f, 0.0f,
-  -1.0f,-1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-  -1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-   1.0f, 1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-  -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-  -1.0f, 1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-   1.0f,-1.0f, 1.0f,  0.0f,-1.0f, 0.0f,
-  -1.0f,-1.0f,-1.0f,  0.0f,-1.0f, 0.0f,
-   1.0f,-1.0f,-1.0f,  0.0f,-1.0f, 0.0f,
-   1.0f, 1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-   1.0f,-1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-  -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-  -1.0f,-1.0f,-1.0f, -1.0f, 0.0f, 0.0f,
-  -1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-  -1.0f, 1.0f,-1.0f, -1.0f, 0.0f, 0.0f,
-   1.0f,-1.0f, 1.0f,  0.0f,-1.0f, 0.0f,
-  -1.0f,-1.0f, 1.0f,  0.0f,-1.0f, 0.0f,
-  -1.0f,-1.0f,-1.0f,  0.0f,-1.0f, 0.0f,
-  -1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-  -1.0f,-1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-   1.0f,-1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-   1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f,-1.0f,-1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f, 1.0f,-1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f,-1.0f,-1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f,-1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-   1.0f, 1.0f,-1.0f,  0.0f, 1.0f, 0.0f,
-  -1.0f, 1.0f,-1.0f,  0.0f, 1.0f, 0.0f,
-   1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-  -1.0f, 1.0f,-1.0f,  0.0f, 1.0f, 0.0f,
-  -1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-   1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-  -1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-   1.0f,-1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-};
-// clang-format on
-
-constexpr int componentPerVector = 3;
-constexpr int componentPerVertex = 2 * componentPerVector;
-constexpr int componentCount = sizeof(vertices) / sizeof(float);
-constexpr int vertexCount = componentCount / componentPerVertex;
-
 constexpr glm::vec4 ClearColor = {0.33f, 0.67f, 1.0f, 1.00f};
 
 // Uniform locations.
@@ -103,17 +59,55 @@ void Scene::Init() {
   glUseProgram(program);
 
   model = Model::LoadFromFile("assets/Cube.gltf");
+  auto &mesh = model.meshes[0];         // support only 1 mesh.
+  auto &primitive = mesh.primitives[0]; // support only 1 primitive.
+
+  if (primitive.indices < 0) {
+    return;
+  }
 
   glCreateVertexArrays(1, &vao);
   glBindVertexArray(vao);
   glGenBuffers(1, &vbo);
-
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), reinterpret_cast<void *>(sizeof(float) * 3));
-  glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
+
+  
+  glBufferData(GL_ARRAY_BUFFER, model.buffers[0].data.size(), model.buffers[0].data.data(), GL_STATIC_DRAW);
+
+  constexpr GLuint iPosition = 0;
+  constexpr GLuint iNormal = 1;
+
+  for (auto &[name, index] : primitive.attributes) {
+    auto &accessor = model.accessors[index];
+
+    GLuint atrributeIndex = -1;
+    if (name == "POSITION") {
+      atrributeIndex = iPosition;
+    } else if (name == "NORMAL") {
+      atrributeIndex = iNormal;
+    } else {
+      continue;
+    }
+
+    int size = 1;
+    if (accessor.type == TINYGLTF_TYPE_SCALAR) {
+      size = 1;
+    } else if (accessor.type == TINYGLTF_TYPE_VEC2) {
+      size = 2;
+    } else if (accessor.type == TINYGLTF_TYPE_VEC3) {
+      size = 3;
+    } else if (accessor.type == TINYGLTF_TYPE_VEC4) {
+      size = 4;
+    } else {
+      assert(0);
+    }
+
+    glVertexAttribPointer(atrributeIndex, size, accessor.componentType, accessor.normalized ? GL_TRUE : GL_FALSE,
+                          accessor.ByteStride(model.bufferViews[accessor.bufferView]),
+                          reinterpret_cast<void *>(model.bufferViews[accessor.bufferView].byteOffset));
+
+    glEnableVertexAttribArray(atrributeIndex);
+  }
 }
 
 void Scene::CleanUp() {
@@ -141,6 +135,8 @@ void Scene::DoFrame(const FrameContext &ctx) {
   auto projectView = projection * view;
 
   glBindVertexArray(vao);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo);
   glUseProgram(program);
 
   auto normalized = glm::normalize(lightDir);
@@ -151,7 +147,7 @@ void Scene::DoFrame(const FrameContext &ctx) {
   glUniform4f(uLightDirection, normalized.r, normalized.g, normalized.b, normalized.a);
   glUniform1f(uAmbientIntensity, ambient);
 
-  glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+  glDrawElements(GL_TRIANGLES, elementCount, elementType, reinterpret_cast<void *>(elementOffset));
 }
 
 void Scene::DoUI() {
