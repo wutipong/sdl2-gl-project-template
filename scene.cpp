@@ -44,6 +44,8 @@ constexpr GLint uAmbientIntensity = 4;
 
 tinygltf::Model model;
 tinygltf::TinyGLTF loader;
+
+Model::Context modelCtx;
 } // namespace
 
 void Scene::Init() {
@@ -59,58 +61,12 @@ void Scene::Init() {
   glUseProgram(program);
 
   model = Model::LoadFromFile("assets/Cube.gltf");
-  auto &mesh = model.meshes[0];         // support only 1 mesh.
-  auto &primitive = mesh.primitives[0]; // support only 1 primitive.
-
-  if (primitive.indices < 0) {
-    return;
-  }
-
-  glCreateVertexArrays(1, &vao);
-  glBindVertexArray(vao);
-  glGenBuffers(1, &vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-  
-  glBufferData(GL_ARRAY_BUFFER, model.buffers[0].data.size(), model.buffers[0].data.data(), GL_STATIC_DRAW);
-
-  constexpr GLuint iPosition = 0;
-  constexpr GLuint iNormal = 1;
-
-  for (auto &[name, index] : primitive.attributes) {
-    auto &accessor = model.accessors[index];
-
-    GLuint atrributeIndex = -1;
-    if (name == "POSITION") {
-      atrributeIndex = iPosition;
-    } else if (name == "NORMAL") {
-      atrributeIndex = iNormal;
-    } else {
-      continue;
-    }
-
-    int size = 1;
-    if (accessor.type == TINYGLTF_TYPE_SCALAR) {
-      size = 1;
-    } else if (accessor.type == TINYGLTF_TYPE_VEC2) {
-      size = 2;
-    } else if (accessor.type == TINYGLTF_TYPE_VEC3) {
-      size = 3;
-    } else if (accessor.type == TINYGLTF_TYPE_VEC4) {
-      size = 4;
-    } else {
-      assert(0);
-    }
-
-    glVertexAttribPointer(atrributeIndex, size, accessor.componentType, accessor.normalized ? GL_TRUE : GL_FALSE,
-                          accessor.ByteStride(model.bufferViews[accessor.bufferView]),
-                          reinterpret_cast<void *>(model.bufferViews[accessor.bufferView].byteOffset));
-
-    glEnableVertexAttribArray(atrributeIndex);
-  }
+  modelCtx = Model::CreateContext(model);
 }
 
 void Scene::CleanUp() {
+
+  Model::CleanUpContext(modelCtx);
   glDeleteBuffers(1, &vbo);
   glDeleteVertexArrays(1, &vao);
 
@@ -147,8 +103,8 @@ void Scene::DoFrame(const FrameContext &ctx) {
   glUniform4f(uLightDirection, normalized.r, normalized.g, normalized.b, normalized.a);
   glUniform1f(uAmbientIntensity, ambient);
 
-  glDrawElements(GL_TRIANGLES, elementCount, elementType, reinterpret_cast<void *>(elementOffset));
-}
+  Model::Draw(model, modelCtx);
+ }
 
 void Scene::DoUI() {
   const ImGuiIO &io = ImGui::GetIO();
