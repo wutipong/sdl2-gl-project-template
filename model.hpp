@@ -13,6 +13,7 @@ struct MeshContext {
 struct Context {
   std::vector<GLuint> buffers;
   std::vector<MeshContext> meshes;
+  std::vector<GLuint> textures;
 };
 
 tinygltf::Model LoadFromFile(const std::string &path);
