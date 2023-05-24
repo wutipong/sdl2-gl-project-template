@@ -11,7 +11,8 @@ add_executable(main
 	"main.cpp" 
 	"scene.hpp" "scene.cpp" 
 	"io_util.hpp"
-        "shader.hpp" "shader.cpp")
+        "shader.hpp" "shader.cpp"
+        "texture.hpp" "texture.cpp")
 
 find_package(SDL2 CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
@@ -54,7 +55,7 @@ endif()
 function(compile_shaders)
     set(oneValueArgs TARGET TARGET)
     set(multiValueArgs TARGET INPUT)
-    set(oneValueArgs DESTINATION DESTINATION)
+    set(oneValueArgs DESTINATION)
 
     cmake_parse_arguments(COMPILE_SHADERS "${options}" "${oneValueArgs}"
             "${multiValueArgs}" ${ARGN}
@@ -72,7 +73,7 @@ endfunction()
 function(copy_resources)
     set(oneValueArgs TARGET TARGET)
     set(multiValueArgs TARGET INPUT)
-    set(oneValueArgs DESTINATION DESTINATION)
+    set(oneValueArgs DESTINATION)
 
     cmake_parse_arguments(COPY_RESOURCES "${options}" "${oneValueArgs}"
             "${multiValueArgs}" ${ARGN}

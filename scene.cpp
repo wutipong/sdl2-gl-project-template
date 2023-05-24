@@ -12,6 +12,7 @@
 #include "ImGuizmo.h"
 #include "io_util.hpp"
 #include "shader.hpp"
+#include "texture.hpp"
 
 namespace {
 glm::vec4 color{1.0f, 1.0f, 1.0f, 1.0f};
@@ -85,6 +86,7 @@ constexpr GLint uWorld = 2;
 constexpr GLint uLightDirection = 3;
 constexpr GLint uAmbientIntensity = 4;
 
+GLuint texture = 0;
 } // namespace
 
 void Scene::Init() {
@@ -128,6 +130,8 @@ void Scene::Init() {
   glEnableVertexAttribArray(iPosition);
   glEnableVertexAttribArray(iNormal);
   glEnableVertexAttribArray(iTexCoord);
+
+  texture = Texture::Load("assets/texture.png");
 }
 
 void Scene::CleanUp() {
@@ -137,6 +141,8 @@ void Scene::CleanUp() {
   glDeleteProgram(program);
   glDeleteShader(vertShader);
   glDeleteShader(fragShader);
+
+  glDeleteTextures(1, &texture);
 }
 
 void Scene::DoFrame(const FrameContext &ctx) {
@@ -164,6 +170,13 @@ void Scene::DoFrame(const FrameContext &ctx) {
   glUniform4f(uColor, color.r, color.g, color.b, color.a);
   glUniform4f(uLightDirection, normalized.r, normalized.g, normalized.b, normalized.a);
   glUniform1f(uAmbientIntensity, ambient);
+
+  glActiveTexture(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
   glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 }
