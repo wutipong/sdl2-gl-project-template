@@ -87,7 +87,14 @@ copy_resources(
         TARGET CopyShaders
         DESTINATION "shaders"
         INPUT "shaders/shader.vert" "shaders/shader.frag"
-)   
+)
+
+copy_resources(
+        TARGET CopyAssets
+        DESTINATION "assets"
+        INPUT "assets/texture.png"
+)
+
 compile_shaders(
         TARGET CompileVertexShader
         DESTINATION "shaders/shader.vert.spv"
