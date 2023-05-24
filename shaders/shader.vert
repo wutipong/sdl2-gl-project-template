@@ -19,6 +19,5 @@ void main() {
   gl_Position = transform * vec4(in_Position, 1.0);
 
   ex_Normal = (in_World * vec4(in_Normal, 0.0)).xyz;
-  
   ex_TexCoord = in_TexCoord;
 }

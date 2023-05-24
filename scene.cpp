@@ -28,45 +28,46 @@ GLuint vbo;
 auto view = glm::lookAt(glm::vec3{5, 0, 0}, glm::vec3{0, 0, 0}, glm::vec3{0, 1, 0});
 auto world = glm::identity<glm::mat4>();
 
+// FIXME: UV is initailized as 0.
 // clang-format off
 constexpr float vertices[] = {
-  /* position       **  normal       */
-  -1.0f,-1.0f,-1.0f, -1.0f, 0.0f, 0.0f,
-  -1.0f,-1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-  -1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-   1.0f, 1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-  -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-  -1.0f, 1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-   1.0f,-1.0f, 1.0f,  0.0f,-1.0f, 0.0f,
-  -1.0f,-1.0f,-1.0f,  0.0f,-1.0f, 0.0f,
-   1.0f,-1.0f,-1.0f,  0.0f,-1.0f, 0.0f,
-   1.0f, 1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-   1.0f,-1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-  -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-  -1.0f,-1.0f,-1.0f, -1.0f, 0.0f, 0.0f,
-  -1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-  -1.0f, 1.0f,-1.0f, -1.0f, 0.0f, 0.0f,
-   1.0f,-1.0f, 1.0f,  0.0f,-1.0f, 0.0f,
-  -1.0f,-1.0f, 1.0f,  0.0f,-1.0f, 0.0f,
-  -1.0f,-1.0f,-1.0f,  0.0f,-1.0f, 0.0f,
-  -1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-  -1.0f,-1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-   1.0f,-1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-   1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f,-1.0f,-1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f, 1.0f,-1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f,-1.0f,-1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f,-1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-   1.0f, 1.0f,-1.0f,  0.0f, 1.0f, 0.0f,
-  -1.0f, 1.0f,-1.0f,  0.0f, 1.0f, 0.0f,
-   1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-  -1.0f, 1.0f,-1.0f,  0.0f, 1.0f, 0.0f,
-  -1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-   1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-  -1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-   1.0f,-1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+  /* position       **  normal         **  uv */
+  -1.0f,-1.0f,-1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+  -1.0f,-1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+  -1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+   1.0f, 1.0f,-1.0f,  0.0f, 0.0f,-1.0f, 1.0f, 1.0f,
+  -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,-1.0f, 0.0f, 0.0f,
+  -1.0f, 1.0f,-1.0f,  0.0f, 0.0f,-1.0f, 0.0f, 0.0f,
+   1.0f,-1.0f, 1.0f,  0.0f,-1.0f, 0.0f, 0.0f, 0.0f,
+  -1.0f,-1.0f,-1.0f,  0.0f,-1.0f, 0.0f, 0.0f, 0.0f,
+   1.0f,-1.0f,-1.0f,  0.0f,-1.0f, 0.0f, 0.0f, 0.0f,
+   1.0f, 1.0f,-1.0f,  0.0f, 0.0f,-1.0f, 0.0f, 0.0f,
+   1.0f,-1.0f,-1.0f,  0.0f, 0.0f,-1.0f, 0.0f, 0.0f,
+  -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,-1.0f, 0.0f, 0.0f,
+  -1.0f,-1.0f,-1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+  -1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+  -1.0f, 1.0f,-1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+   1.0f,-1.0f, 1.0f,  0.0f,-1.0f, 0.0f, 0.0f, 0.0f,
+  -1.0f,-1.0f, 1.0f,  0.0f,-1.0f, 0.0f, 0.0f, 0.0f,
+  -1.0f,-1.0f,-1.0f,  0.0f,-1.0f, 0.0f, 0.0f, 0.0f,
+  -1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+  -1.0f,-1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+   1.0f,-1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+   1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+   1.0f,-1.0f,-1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+   1.0f, 1.0f,-1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+   1.0f,-1.0f,-1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+   1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+   1.0f,-1.0f, 1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+   1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+   1.0f, 1.0f,-1.0f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+  -1.0f, 1.0f,-1.0f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+   1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+  -1.0f, 1.0f,-1.0f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+  -1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+   1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+  -1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+   1.0f,-1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
 };
 // clang-format on
 
@@ -87,8 +88,15 @@ constexpr GLint uAmbientIntensity = 4;
 } // namespace
 
 void Scene::Init() {
-  vertShader = Shader::LoadBinary("shaders/shader.vert.spv", GL_VERTEX_SHADER);
-  fragShader = Shader::LoadBinary("shaders/shader.frag.spv", GL_FRAGMENT_SHADER);
+
+  constexpr bool useBinary = false;
+  if (useBinary) {
+    vertShader = Shader::LoadBinary("shaders/shader.vert.spv", GL_VERTEX_SHADER);
+    fragShader = Shader::LoadBinary("shaders/shader.frag.spv", GL_FRAGMENT_SHADER);
+  } else {
+    vertShader = Shader::LoadSource("shaders/shader.vert", GL_VERTEX_SHADER);
+    fragShader = Shader::LoadSource("shaders/shader.frag", GL_FRAGMENT_SHADER);
+  }
 
   program = glCreateProgram();
   glAttachShader(program, vertShader);
@@ -104,10 +112,22 @@ void Scene::Init() {
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), reinterpret_cast<void *>(sizeof(float) * 3));
-  glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
+
+  constexpr GLuint iPosition = 0;
+  constexpr GLuint iNormal = 1;
+  constexpr GLuint iTexCoord = 2;
+
+  constexpr GLsizei stride = 8 * sizeof(float);
+
+  auto attributePosition = [](auto pos) constexpr { return reinterpret_cast<void *>(sizeof(float) * pos); };
+
+  glVertexAttribPointer(iPosition, 3, GL_FLOAT, GL_FALSE, stride, attributePosition(0));
+  glVertexAttribPointer(iNormal, 3, GL_FLOAT, GL_FALSE, stride, attributePosition(3));
+  glVertexAttribPointer(iTexCoord, 2, GL_FLOAT, GL_FALSE, stride, attributePosition(6));
+
+  glEnableVertexAttribArray(iPosition);
+  glEnableVertexAttribArray(iNormal);
+  glEnableVertexAttribArray(iTexCoord);
 }
 
 void Scene::CleanUp() {
