@@ -81,14 +81,14 @@ GLuint Shader::LoadBinary(const std::string &path, const GLenum &shaderType, con
   return shader;
 }
 
-void Shader::LinkProgram(const GLint& program) {
+void Shader::LinkProgram(const GLint &program) {
   glLinkProgram(program);
 
   GLint linkStatus;
   glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
 
   if (linkStatus != GL_TRUE) {
-    spdlog::error("Shader compile failed.");
+    spdlog::error("Shader link failed.");
   }
 
   GLint logLength;

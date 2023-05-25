@@ -11,7 +11,8 @@ add_executable(main
 	"main.cpp" 
 	"scene.hpp" "scene.cpp" 
 	"io_util.hpp"
-    "shader.hpp" "shader.cpp")
+        "shader.hpp" "shader.cpp"
+        "texture.hpp" "texture.cpp")
 
 find_package(SDL2 CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
@@ -22,10 +23,13 @@ find_package(spdlog CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(imguizmo CONFIG REQUIRED)
 find_package(glslang CONFIG REQUIRED)
+find_package(Stb REQUIRED)
 
 find_program(GLSL_VALIDATOR glslangValidator REQUIRED)
 
 # target_link_libraries(main PRIVATE glslang::OSDependent glslang::glslang glslang::MachineIndependent glslang::GenericCodeGen glslang::glslang-default-resource-limits glslang::OGLCompiler glslang::SPVRemapper glslang::SPIRV glslang::HLSL)
+
+target_include_directories(main PRIVATE ${Stb_INCLUDE_DIR})
 
 target_link_libraries(main PRIVATE 
     SDL2::SDL2 
@@ -51,7 +55,7 @@ endif()
 function(compile_shaders)
     set(oneValueArgs TARGET TARGET)
     set(multiValueArgs TARGET INPUT)
-    set(oneValueArgs DESTINATION DESTINATION)
+    set(oneValueArgs DESTINATION)
 
     cmake_parse_arguments(COMPILE_SHADERS "${options}" "${oneValueArgs}"
             "${multiValueArgs}" ${ARGN}
@@ -69,7 +73,7 @@ endfunction()
 function(copy_resources)
     set(oneValueArgs TARGET TARGET)
     set(multiValueArgs TARGET INPUT)
-    set(oneValueArgs DESTINATION DESTINATION)
+    set(oneValueArgs DESTINATION)
 
     cmake_parse_arguments(COPY_RESOURCES "${options}" "${oneValueArgs}"
             "${multiValueArgs}" ${ARGN}
@@ -87,7 +91,14 @@ copy_resources(
         TARGET CopyShaders
         DESTINATION "shaders"
         INPUT "shaders/shader.vert" "shaders/shader.frag"
-)   
+)
+
+copy_resources(
+        TARGET CopyAssets
+        DESTINATION "assets"
+        INPUT "assets/texture.png"
+)
+
 compile_shaders(
         TARGET CompileVertexShader
         DESTINATION "shaders/shader.vert.spv"

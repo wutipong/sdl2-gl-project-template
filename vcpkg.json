@@ -8,6 +8,7 @@
     "spdlog",
     "fmt",
     "imguizmo",
+    "stb",
     {
       "name": "imgui",
       "features": [

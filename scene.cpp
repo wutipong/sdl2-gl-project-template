@@ -12,6 +12,7 @@
 #include "ImGuizmo.h"
 #include "io_util.hpp"
 #include "shader.hpp"
+#include "texture.hpp"
 
 namespace {
 glm::vec4 color{1.0f, 1.0f, 1.0f, 1.0f};
@@ -30,43 +31,43 @@ auto world = glm::identity<glm::mat4>();
 
 // clang-format off
 constexpr float vertices[] = {
-  /* position       **  normal       */
-  -1.0f,-1.0f,-1.0f, -1.0f, 0.0f, 0.0f,
-  -1.0f,-1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-  -1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-   1.0f, 1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-  -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-  -1.0f, 1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-   1.0f,-1.0f, 1.0f,  0.0f,-1.0f, 0.0f,
-  -1.0f,-1.0f,-1.0f,  0.0f,-1.0f, 0.0f,
-   1.0f,-1.0f,-1.0f,  0.0f,-1.0f, 0.0f,
-   1.0f, 1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-   1.0f,-1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-  -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,-1.0f,
-  -1.0f,-1.0f,-1.0f, -1.0f, 0.0f, 0.0f,
-  -1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-  -1.0f, 1.0f,-1.0f, -1.0f, 0.0f, 0.0f,
-   1.0f,-1.0f, 1.0f,  0.0f,-1.0f, 0.0f,
-  -1.0f,-1.0f, 1.0f,  0.0f,-1.0f, 0.0f,
-  -1.0f,-1.0f,-1.0f,  0.0f,-1.0f, 0.0f,
-  -1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-  -1.0f,-1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-   1.0f,-1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-   1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f,-1.0f,-1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f, 1.0f,-1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f,-1.0f,-1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f,-1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-   1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-   1.0f, 1.0f,-1.0f,  0.0f, 1.0f, 0.0f,
-  -1.0f, 1.0f,-1.0f,  0.0f, 1.0f, 0.0f,
-   1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-  -1.0f, 1.0f,-1.0f,  0.0f, 1.0f, 0.0f,
-  -1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-   1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-  -1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-   1.0f,-1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+  /*   position         **        normal         **      uv    */
+   1.0f, -1.0f,  1.0f, /**/ 0.0f, -1.0f,  0.0f, /**/ 0.0f,  0.0f,
+  -1.0f, -1.0f, -1.0f, /**/ 0.0f, -1.0f,  0.0f, /**/-1.0f,  1.0f,
+   1.0f, -1.0f, -1.0f, /**/ 0.0f, -1.0f,  0.0f, /**/ 0.0f,  1.0f,
+  -1.0f,  1.0f, -1.0f, /**/ 0.0f,  1.0f,  0.0f, /**/ 0.0f,  0.0f,
+   1.0f,  1.0f,  1.0f, /**/ 0.0f,  1.0f,  0.0f, /**/ 1.0f, -1.0f,
+   1.0f,  1.0f, -1.0f, /**/ 0.0f,  1.0f,  0.0f, /**/ 1.0f,  0.0f,
+   1.0f,  1.0f, -1.0f, /**/ 1.0f,  0.0f,  0.0f, /**/ 1.0f,  0.0f,
+   1.0f, -1.0f,  1.0f, /**/ 1.0f,  0.0f,  0.0f, /**/ 0.0f, -1.0f,
+   1.0f, -1.0f, -1.0f, /**/ 1.0f,  0.0f,  0.0f, /**/ 1.0f, -1.0f,
+   1.0f,  1.0f,  1.0f, /**/ 0.0f,  0.0f,  1.0f, /**/ 1.0f,  0.0f,
+  -1.0f, -1.0f,  1.0f, /**/ 0.0f,  0.0f,  1.0f, /**/ 0.0f, -1.0f,
+   1.0f, -1.0f,  1.0f, /**/ 0.0f,  0.0f,  1.0f, /**/ 1.0f, -1.0f,
+  -1.0f, -1.0f,  1.0f, /**/-1.0f,  0.0f,  0.0f, /**/ 0.0f,  0.0f,
+  -1.0f,  1.0f, -1.0f, /**/-1.0f,  0.0f,  0.0f, /**/ 1.0f,  1.0f,
+  -1.0f, -1.0f, -1.0f, /**/-1.0f,  0.0f,  0.0f, /**/ 1.0f,  0.0f,
+   1.0f, -1.0f, -1.0f, /**/ 0.0f,  0.0f, -1.0f, /**/ 0.0f,  0.0f,
+  -1.0f,  1.0f, -1.0f, /**/ 0.0f,  0.0f, -1.0f, /**/-1.0f,  1.0f,
+   1.0f,  1.0f, -1.0f, /**/ 0.0f,  0.0f, -1.0f, /**/ 0.0f,  1.0f,
+   1.0f, -1.0f,  1.0f, /**/ 0.0f, -1.0f,  0.0f, /**/ 0.0f,  0.0f,
+  -1.0f, -1.0f,  1.0f, /**/ 0.0f, -1.0f,  0.0f, /**/-1.0f,  0.0f,
+  -1.0f, -1.0f, -1.0f, /**/ 0.0f, -1.0f,  0.0f, /**/-1.0f,  1.0f,
+  -1.0f,  1.0f, -1.0f, /**/ 0.0f,  1.0f,  0.0f, /**/ 0.0f,  0.0f,
+  -1.0f,  1.0f,  1.0f, /**/ 0.0f,  1.0f,  0.0f, /**/ 0.0f, -1.0f,
+   1.0f,  1.0f,  1.0f, /**/ 0.0f,  1.0f,  0.0f, /**/ 1.0f, -1.0f,
+   1.0f,  1.0f, -1.0f, /**/ 1.0f,  0.0f,  0.0f, /**/ 1.0f,  0.0f,
+   1.0f,  1.0f,  1.0f, /**/ 1.0f,  0.0f,  0.0f, /**/ 0.0f,  0.0f,
+   1.0f, -1.0f,  1.0f, /**/ 1.0f,  0.0f,  0.0f, /**/ 0.0f, -1.0f,
+   1.0f,  1.0f,  1.0f, /**/ 0.0f,  0.0f,  1.0f, /**/ 1.0f,  0.0f,
+  -1.0f,  1.0f,  1.0f, /**/ 0.0f,  0.0f,  1.0f, /**/ 0.0f,  0.0f,
+  -1.0f, -1.0f,  1.0f, /**/ 0.0f,  0.0f,  1.0f, /**/ 0.0f, -1.0f,
+  -1.0f, -1.0f,  1.0f, /**/-1.0f,  0.0f,  0.0f, /**/ 0.0f,  0.0f,
+  -1.0f,  1.0f,  1.0f, /**/-1.0f,  0.0f,  0.0f, /**/ 0.0f,  1.0f,
+  -1.0f,  1.0f, -1.0f, /**/-1.0f,  0.0f,  0.0f, /**/ 1.0f,  1.0f,
+   1.0f, -1.0f, -1.0f, /**/ 0.0f,  0.0f, -1.0f, /**/ 0.0f,  0.0f,
+  -1.0f, -1.0f, -1.0f, /**/ 0.0f,  0.0f, -1.0f, /**/-1.0f,  0.0f,
+  -1.0f,  1.0f, -1.0f, /**/ 0.0f,  0.0f, -1.0f, /**/-1.0f,  1.0f,
 };
 // clang-format on
 
@@ -84,11 +85,18 @@ constexpr GLint uWorld = 2;
 constexpr GLint uLightDirection = 3;
 constexpr GLint uAmbientIntensity = 4;
 
+GLuint texture = 0;
 } // namespace
 
 void Scene::Init() {
-  vertShader = Shader::LoadBinary("shaders/shader.vert.spv", GL_VERTEX_SHADER);
-  fragShader = Shader::LoadBinary("shaders/shader.frag.spv", GL_FRAGMENT_SHADER);
+  constexpr bool useCompiledShader = true;
+  if (useCompiledShader) {
+    vertShader = Shader::LoadBinary("shaders/shader.vert.spv", GL_VERTEX_SHADER);
+    fragShader = Shader::LoadBinary("shaders/shader.frag.spv", GL_FRAGMENT_SHADER);
+  } else {
+    vertShader = Shader::LoadSource("shaders/shader.vert", GL_VERTEX_SHADER);
+    fragShader = Shader::LoadSource("shaders/shader.frag", GL_FRAGMENT_SHADER);
+  }
 
   program = glCreateProgram();
   glAttachShader(program, vertShader);
@@ -104,10 +112,24 @@ void Scene::Init() {
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), reinterpret_cast<void *>(sizeof(float) * 3));
-  glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
+
+  constexpr GLuint iPosition = 0;
+  constexpr GLuint iNormal = 1;
+  constexpr GLuint iTexCoord = 2;
+
+  constexpr GLsizei stride = 8 * sizeof(float);
+
+  auto attributePosition = [](auto pos) constexpr { return reinterpret_cast<void *>(sizeof(float) * pos); };
+
+  glVertexAttribPointer(iPosition, 3, GL_FLOAT, GL_FALSE, stride, attributePosition(0));
+  glVertexAttribPointer(iNormal, 3, GL_FLOAT, GL_FALSE, stride, attributePosition(3));
+  glVertexAttribPointer(iTexCoord, 2, GL_FLOAT, GL_FALSE, stride, attributePosition(6));
+
+  glEnableVertexAttribArray(iPosition);
+  glEnableVertexAttribArray(iNormal);
+  glEnableVertexAttribArray(iTexCoord);
+
+  texture = Texture::Load("assets/texture.png");
 }
 
 void Scene::CleanUp() {
@@ -117,6 +139,8 @@ void Scene::CleanUp() {
   glDeleteProgram(program);
   glDeleteShader(vertShader);
   glDeleteShader(fragShader);
+
+  glDeleteTextures(1, &texture);
 }
 
 void Scene::DoFrame(const FrameContext &ctx) {
@@ -144,6 +168,13 @@ void Scene::DoFrame(const FrameContext &ctx) {
   glUniform4f(uColor, color.r, color.g, color.b, color.a);
   glUniform4f(uLightDirection, normalized.r, normalized.g, normalized.b, normalized.a);
   glUniform1f(uAmbientIntensity, ambient);
+
+  glActiveTexture(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
   glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 }
