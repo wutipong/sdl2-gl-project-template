@@ -16,6 +16,8 @@ Above libraries are configured using [Vcpkg](https://github.com/microsoft/vcpkg)
 
 Of course, feel free to add and/or remove library to use withing your project.
 
+This template comes with GitHub actions to create build when changes are push back to GitHub. These actions create a build for Windows, Linux, and MacOS when main branch is updated, and a Windows build when any other branch is updated.
+
 ## Usage
 
 ### Using Github template feature.
