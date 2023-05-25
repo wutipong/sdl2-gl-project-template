@@ -9,7 +9,7 @@
 #include <vector>
 
 GLuint Texture::Load(const std::string &path) {
-  std::vector<unsigned char> data;
+  std::vector<char> data;
   IOUtiliy::LoadFile(path, data, std::ios::binary | std::ios::in);
 
   spdlog::info("Loading texture: {}.", path);
@@ -19,7 +19,7 @@ GLuint Texture::Load(const std::string &path) {
   int channels_in_file;
 
   auto imageData =
-      stbi_load_from_memory(data.data(), static_cast<int>(data.size()), &width, &height, &channels_in_file, 4);
+      stbi_load_from_memory(reinterpret_cast<const stbi_uc*>(data.data()), static_cast<int>(data.size()), &width, &height, &channels_in_file, 4);
 
   if (imageData == nullptr) {
     spdlog::error("Loading texture fails!: {}", path);
