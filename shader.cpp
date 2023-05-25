@@ -18,7 +18,7 @@ GLuint Shader::LoadSource(const std::string &path, const GLenum &type) {
   spdlog::info("Loading shader: {}.", path);
 
   std::string srcStr;
-  LoadFile(path, srcStr);
+  IOUtiliy::LoadFile(path, srcStr);
 
   return Compile(type, srcStr);
 }
@@ -56,7 +56,7 @@ GLuint Shader::LoadBinary(const std::string &path, const GLenum &shaderType, con
   auto shader = glCreateShader(shaderType);
   std::vector<GLchar> buffer;
   buffer.reserve(2 * 1'024);
-  LoadFile(path, buffer, std::ios::in | std::ios::binary);
+  IOUtiliy::LoadFile(path, buffer, std::ios::in | std::ios::binary);
 
   glShaderBinary(1, &shader, GL_SHADER_BINARY_FORMAT_SPIR_V, buffer.data(), static_cast<GLsizei>(buffer.size()));
   glSpecializeShader(shader, entryPoint.c_str(), 0, nullptr, nullptr);
