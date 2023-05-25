@@ -74,7 +74,10 @@ int main(int argc, char **argv) {
     ImGui_ImplOpenGL3_Init(GlslVersion);
   }
 
-  Scene::Init();
+  if (Scene::Init() == false) {
+    spdlog::error("Scene initialization fails.");
+    return -1;
+  }
 
   auto lastFrame = SDL_GetTicks64();
 

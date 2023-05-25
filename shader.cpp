@@ -81,7 +81,7 @@ GLuint Shader::LoadBinary(const std::string &path, const GLenum &shaderType, con
   return shader;
 }
 
-void Shader::LinkProgram(const GLint &program) {
+bool Shader::LinkProgram(const GLint &program) {
   glLinkProgram(program);
 
   GLint linkStatus;
@@ -100,4 +100,6 @@ void Shader::LinkProgram(const GLint &program) {
     glGetShaderInfoLog(program, static_cast<GLsizei>(log.size()), &logLength, log.data());
     spdlog::debug("Shader Log {}.", log);
   }
+
+  return linkStatus == GL_TRUE;
 }

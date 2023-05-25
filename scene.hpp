@@ -11,7 +11,7 @@ struct FrameContext {
   const float frameTime;
 };
 
-void Init();
+bool Init();
 void CleanUp();
 void DoFrame(const FrameContext &ctx);
 void DoUI();
