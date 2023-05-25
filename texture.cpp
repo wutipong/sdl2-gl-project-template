@@ -10,7 +10,7 @@
 
 GLuint Texture::Load(const std::string &path) {
   std::vector<unsigned char> data;
-  LoadFile(path, data, std::ios::binary | std::ios::in);
+  IOUtiliy::LoadFile(path, data, std::ios::binary | std::ios::in);
 
   spdlog::info("Loading texture: {}.", path);
 
