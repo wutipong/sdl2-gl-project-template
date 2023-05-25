@@ -3,7 +3,6 @@
 #include <fstream>
 #include <streambuf>
 #include <vector>
-#include <locale>
 
 namespace IOUtiliy {
 template <class container_type>
