@@ -88,21 +88,21 @@ constexpr GLint uAmbientIntensity = 4;
 GLuint texture = 0;
 } // namespace
 
-void Scene::Init() {
-  constexpr bool useCompiledShader = true;
-  if (useCompiledShader) {
-    vertShader = Shader::LoadBinary("shaders/shader.vert.spv", GL_VERTEX_SHADER);
-    fragShader = Shader::LoadBinary("shaders/shader.frag.spv", GL_FRAGMENT_SHADER);
-  } else {
-    vertShader = Shader::LoadSource("shaders/shader.vert", GL_VERTEX_SHADER);
-    fragShader = Shader::LoadSource("shaders/shader.frag", GL_FRAGMENT_SHADER);
+bool Scene::Init() {
+  vertShader = Shader::LoadSource("shaders/shader.vert", GL_VERTEX_SHADER);
+  fragShader = Shader::LoadSource("shaders/shader.frag", GL_FRAGMENT_SHADER);
+
+  if (vertShader == 0 || fragShader == 0) {
+    return false;
   }
 
   program = glCreateProgram();
   glAttachShader(program, vertShader);
   glAttachShader(program, fragShader);
 
-  Shader::LinkProgram(program);
+  if (Shader::LinkProgram(program) == false) {
+    return false;
+  };
 
   glUseProgram(program);
 
@@ -130,6 +130,12 @@ void Scene::Init() {
   glEnableVertexAttribArray(iTexCoord);
 
   texture = Texture::Load("assets/texture.png");
+
+  if (texture == 0) {
+    return false;
+  }
+
+  return true;
 }
 
 void Scene::CleanUp() {
